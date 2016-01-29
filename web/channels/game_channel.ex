@@ -5,6 +5,7 @@ defmodule Mmordie.GameChannel do
 
   def join("mmordie:game", message, socket) do
     Process.flag(:trap_exit, true)
+    # init the game state store
     # start the game loop
     :timer.send_interval(40, :update)
     {:ok, socket}
@@ -21,7 +22,7 @@ defmodule Mmordie.GameChannel do
   end
 
   def handle_info(:update, socket) do
-    push socket, "new:msg", %{user: "SYSTEM", body: "ping"}
+    broadcast! socket, "new:msg", %{user: "SYSTEM", body: "ping"}
     {:noreply, socket}
   end
 
