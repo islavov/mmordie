@@ -1,0 +1,3 @@
+defmodule Mmordie.GameChannel do
+  use Phoenix.Channel
+  require Logger
