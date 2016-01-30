@@ -94,21 +94,27 @@ class GameState extends Phaser.State {
 
   }
 
-  syncPositions(playerData) {
-    if (playerData.user == this.game.userID) {
-      return;
-    }
-    if (typeof this.others[playerData.user] === 'undefined') {
-      var other_player = new Enemy(this.game,
-        playerData.position.x, playerData.position.y, 'alien', playerData.options.tint);
-      this.others[playerData.user] = other_player;
-      this.enemies.add(other_player);
-    } else {
-      this.others[playerData.user].x = playerData.position.x;
-      this.others[playerData.user].y = playerData.position.y;
-      this.others[playerData.user].body.velocity.x = playerData.velocity.x;
-      this.others[playerData.user].body.velocity.y = playerData.velocity.y;
-    }
+  syncPositions(syncData) {
+    syncData.players.map(
+      function (playerData) {
+        if (playerData.id == this.game.userID) {
+          return;
+        }
+
+        if (typeof this.others[playerData.id] === 'undefined') {
+          var other_player = new Enemy(this.game,
+            playerData.position.x, playerData.position.y, 'alien', playerData.options.tint);
+          this.others[playerData.id] = other_player;
+          this.enemies.add(other_player);
+        } else {
+          console.log(playerData.position.x, playerData.position.y);
+          this.others[playerData.id].x = playerData.position.x;
+          this.others[playerData.id].y = playerData.position.y;
+          this.others[playerData.id].body.velocity.x = playerData.velocity.x;
+          this.others[playerData.id].body.velocity.y = playerData.velocity.y;
+        }
+
+      }.bind(this));
   }
 
   handleColission() {

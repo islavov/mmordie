@@ -26,7 +26,7 @@ function initGame(){
 
 	function onCreate() {
 		game.userID = uuid.v4();
-		game.sync = new Sync(this.userID);
+		game.sync = new Sync(game.userID);
 		game.sync.chan.on("join", onJoin);
 		this.game.world.setBounds(0, 0, 2260, 2600);
 	}

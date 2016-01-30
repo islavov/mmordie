@@ -22,6 +22,9 @@ defmodule Mmordie.Game do
     :random.seed(:os.timestamp)
     # start storage
     Agent.start_link(fn -> %{} end, name: :game_store)
+
+    # Init player container
+    set("players", %{})
     {:ok, self}
   end
 
@@ -42,7 +45,6 @@ defmodule Mmordie.Game do
       map = Mmordie.World.generate()
       set("map", map)
       # init players
-      set("players", %{})
     end
 
     push socket, "join",  %{map: %{
@@ -53,13 +55,12 @@ defmodule Mmordie.Game do
   end
 
   def update(:server, data) do
-    Logger.debug "Update server #{inspect data}"
-    send_response "new:update", %{players: get("players")}
+    send_response "new:update", %{players: Map.values(get("players"))}
   end
 
   def update(:client, data) do
     players = get("players")
-    player =  %Mmordie.Player{id: data["user"],
+    player =  %Mmordie.Player{id: data["id"],
                               position: data["position"],
                               options: data["options"],
                               velocity: data["velocity"]}
