@@ -19,8 +19,8 @@ defmodule Mmordie.GameChannel do
     {:noreply, socket}
   end
 
-  def terminate(reason, _socket) do
-    Logger.debug"> leave #{inspect reason}"
+  def terminate(_reason, socket) do
+    Game.on_disconnect(socket.id)
     :ok
   end
 
