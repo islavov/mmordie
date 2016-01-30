@@ -23,22 +23,22 @@ class GameState extends Phaser.State {
       this.game.cache.getImage('background').height,
       'background');
 
-    this.map = this.game.add.tilemap();
-    this.map.addTilesetImage('tiles', null, 256, 256);
+    // this.map = this.game.add.tilemap();
+    // this.map.addTilesetImage('tiles', null, 256, 256);
 
-    this.layer = this.map.create('base', this.game.worldMap.size.x, this.game.worldMap.size.y, 256, 256);
-    //this.layer = this.map.createLayer('Ground');
-    var y = 0;
-    for (var i in this.game.worldMap.data) {
-      if (i % this.game.worldMap.size.x == 0 && i != 0) {
-        y += 1
-      }
-      var tile = this.game.worldMap.data[i];
-      var x = i % this.game.worldMap.size.x;
-      if (tile != 0) {
-        this.map.putTile(tile - 1, x, y, this.layer);
-      }
-    }
+    // this.layer = this.map.create('base', this.game.worldMap.size.x, this.game.worldMap.size.y, 256, 256);
+    // //this.layer = this.map.createLayer('Ground');
+    // var y = 0;
+    // for (var i in this.game.worldMap.data) {
+    //   if (i % this.game.worldMap.size.x == 0 && i != 0) {
+    //     y += 1
+    //   }
+    //   var tile = this.game.worldMap.data[i];
+    //   var x = i % this.game.worldMap.size.x;
+    //   if (tile != 0) {
+    //     this.map.putTile(tile - 1, x, y, this.layer);
+    //   }
+    // }
   }
 
   update() {
