@@ -54,9 +54,8 @@ defmodule Mmordie.Game do
                            }
   end
 
-  def on_disconnect(user_id) do
-    players = Map.drop(get("players"), [user_id])
-    set("players", players)
+  def on_disconnect(player_id) do
+    remove_player(player_id)
   end
 
   def update(:server, data) do
@@ -64,16 +63,28 @@ defmodule Mmordie.Game do
   end
 
   def update(:client, data) do
-    players = get("players")
-    player =  %Mmordie.Player{id: data["id"],
-                              position: data["position"],
-                              options: data["options"],
-                              velocity: data["velocity"]}
-    players = Map.put(players, player.id, player)
-    set("players", players)
+    # TODO if player dead, remove it
+    update_player(data["id"], data)
   end
 
   defp send_response(response_type, data) do
     Mmordie.Endpoint.broadcast! "mmordie:game", response_type, data
+  end
+
+  ##### PLAYER FUNCTIONS #####
+  # TODO move to player module
+  defp remove_player(player_id) do
+    players = Map.drop(get("players"), [player_id])
+    set("players", players)
+  end
+
+  defp update_player(player_id, player_data) do
+    players = get("players")
+    player =  %Mmordie.Player{id: player_id,
+                              position: player_data["position"],
+                              options: player_data["options"],
+                              velocity: player_data["velocity"]}
+    players = Map.put(players, player_id, player)
+    set("players", players)
   end
 end
