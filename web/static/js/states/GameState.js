@@ -24,12 +24,8 @@ class GameState extends Phaser.State {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.create.texture('alien', ufo, 4, 4);
 
-    //this.map = this.game.add.tilemap();
 
-    //this.map.addTilesetImage('hexagon', 'hexagon');
-
-    //this.layer = this.map.createLayer('Ground');
-    //this.layer.resizeWorld();
+    this.initMap();
 
     let center = {x: this.game.world.centerX, y: this.game.world.centerY};
 
@@ -39,7 +35,26 @@ class GameState extends Phaser.State {
     this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
-    this.game.sync.chan.on('new:player_position', this.syncPositions.bind(this))
+    this.game.sync.chan.on(this.game.sync.UPDATE, this.syncPositions.bind(this))
+  }
+
+  initMap() {
+    this.map = this.game.add.tilemap();
+    this.map.addTilesetImage('tiles', null, 256, 256);
+
+    this.layer = this.map.create('base', this.game.worldMap.x, this.game.worldMap.y, 256, 256);
+    //this.layer = this.map.createLayer('Ground');
+    var y = 0;
+    for (var i in this.game.worldMap.data){
+      if (i % this.game.worldMap.x == 0 && i != 0){
+        y +=1
+      }
+      var tile = this.game.worldMap.data[i];
+      var x = i % this.game.worldMap.x;
+      if (tile != 0 ){
+        this.map.putTile(tile-1, x, y, this.layer);
+      }
+    }
   }
 
   update() {
@@ -79,21 +94,27 @@ class GameState extends Phaser.State {
 
   }
 
-  syncPositions(playerData) {
-    if (playerData.user == this.game.userID) {
-      return;
-    }
-    if (typeof this.others[playerData.user] === 'undefined') {
-      var other_player = new Enemy(this.game,
-        playerData.position.x, playerData.position.y, 'alien', playerData.options.tint);
-      this.others[playerData.user] = other_player;
-      this.enemies.add(other_player);
-    } else {
-      this.others[playerData.user].x = playerData.position.x;
-      this.others[playerData.user].y = playerData.position.y;
-      this.others[playerData.user].body.velocity.x = playerData.velocity.x;
-      this.others[playerData.user].body.velocity.y = playerData.velocity.y;
-    }
+  syncPositions(syncData) {
+    syncData.players.map(
+      function (playerData) {
+        if (playerData.id == this.game.userID) {
+          return;
+        }
+
+        if (typeof this.others[playerData.id] === 'undefined') {
+          var other_player = new Enemy(this.game,
+            playerData.position.x, playerData.position.y, 'alien', playerData.options.tint);
+          this.others[playerData.id] = other_player;
+          this.enemies.add(other_player);
+        } else {
+          console.log(playerData.position.x, playerData.position.y);
+          this.others[playerData.id].x = playerData.position.x;
+          this.others[playerData.id].y = playerData.position.y;
+          this.others[playerData.id].body.velocity.x = playerData.velocity.x;
+          this.others[playerData.id].body.velocity.y = playerData.velocity.y;
+        }
+
+      }.bind(this));
   }
 
   handleColission() {

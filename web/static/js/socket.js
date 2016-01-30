@@ -2,7 +2,10 @@ import {Socket} from "phoenix";
 
 class Sync {
 
+
   constructor(user_id){
+    this.UPDATE = 'new:update';
+
     this.userId = user_id;
     this.log_enabled = false;
     let socket = new Socket("/socket", {
@@ -47,10 +50,13 @@ class Sync {
     }
   }
 
-  syncPlayer(player){
-    this.chan.push("new:update", {'user': this.userId, 'position': player.world,
-                                           'options': {'tint': player.tint},
-                                           'velocity': player.body.velocity}
+  syncPlayer(player) {
+    this.chan.push(this.UPDATE, {
+        'id': this.userId,
+        'position': player.world,
+        'options': {'tint': player.tint},
+        'velocity': player.body.velocity
+      }
     )
   }
 }

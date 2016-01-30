@@ -21,14 +21,18 @@ function initGame(){
 	);
 
 	function onPreload(){
-			game.load.image("hexagon", "images/hexagon.png");
+		game.load.image('tiles', 'images/grass-att1-big.png');
 	}
 
 	function onCreate() {
 		game.userID = uuid.v4();
-		game.sync = new Sync(this.userID);
-		this.game.world.setBounds(0, 0, 2000, 2000);
+		game.sync = new Sync(game.userID);
+		game.sync.chan.on("join", onJoin);
+		this.game.world.setBounds(0, 0, 2260, 2600);
+	}
 
+	function onJoin(msg){
+		game.worldMap = msg.map;
 		game.state.add('GameState', GameState, false);
 		game.state.start('GameState');
 	}
