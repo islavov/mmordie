@@ -5,7 +5,7 @@ defmodule Mmordie.GameChannel do
 
   def join("mmordie:game", message, socket) do
     Process.flag(:trap_exit, true)
-    Logger.debug "> New Player: #{inspect message}"
+    Logger.debug "> New Player: #{inspect socket}"
     send(self, :after_join)
     {:ok, socket}
   end

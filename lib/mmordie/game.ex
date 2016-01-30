@@ -64,7 +64,7 @@ defmodule Mmordie.Game do
                               position: data["position"],
                               options: data["options"],
                               velocity: data["velocity"]}
-    players = Map.put_new(players, player.id, player)
+    players = Map.put(players, player.id, player)
     set("players", players)
   end
 
