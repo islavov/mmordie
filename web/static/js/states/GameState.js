@@ -24,14 +24,14 @@ class GameState extends Phaser.State {
     this.layer = this.map.create('base', this.game.worldMap.x, this.game.worldMap.y, 256, 256);
     //this.layer = this.map.createLayer('Ground');
     var y = 0;
-    for (var i in this.game.worldMap.data){
-      if (i % this.game.worldMap.x == 0 && i != 0){
-        y +=1
+    for (var i in this.game.worldMap.data) {
+      if (i % this.game.worldMap.x == 0 && i != 0) {
+        y += 1
       }
       var tile = this.game.worldMap.data[i];
       var x = i % this.game.worldMap.x;
-      if (tile != 0 ){
-        this.map.putTile(tile-1, x, y, this.layer);
+      if (tile != 0) {
+        this.map.putTile(tile - 1, x, y, this.layer);
       }
     }
   }
@@ -67,7 +67,7 @@ class GameState extends Phaser.State {
 
         if (typeof this.others[playerData.id] === 'undefined') {
           var other_player = new Enemy(this.game,
-            playerData.position.x, playerData.position.y, 'player', playerData.options.tint);
+            playerData.position.x, playerData.position.y, 'player');
           this.others[playerData.id] = other_player;
           this.enemies.add(other_player);
         } else {
@@ -82,8 +82,8 @@ class GameState extends Phaser.State {
       }.bind(this));
 
     // Kill missing in action
-    Object.keys(this.others).map(function (player_id){
-      if (currentPlayers.indexOf(player_id) === -1){
+    Object.keys(this.others).map(function (player_id) {
+      if (currentPlayers.indexOf(player_id) === -1) {
         this.others[player_id].destroy();
         delete this.others[player_id];
       }
@@ -98,7 +98,7 @@ class GameState extends Phaser.State {
   render() {
     //this.game.debug.bodyInfo(this.player, 96, 96);
     //this.game.debug.body(this.player);
-    this.game.debug.text(`Active enemies: ${this.enemies.length}`, 100, 380 );
+    this.game.debug.text(`Active enemies: ${this.enemies.length}`, 100, 380);
     this.game.debug.cameraInfo(this.game.camera, 32, 32);
     this.game.debug.spriteCoords(this.player, 32, 500);
 

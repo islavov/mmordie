@@ -3,22 +3,24 @@ import {Socket} from "phoenix";
 class Sync {
 
 
-  constructor(user_id){
+  constructor(user_id) {
     this.UPDATE = 'new:update';
 
     this.userId = user_id;
     this.log_enabled = false;
     let socket = new Socket("/socket", {
-      logger: ((kind, msg, data) => { this.log(`${kind}: ${msg}`, data)}),
+      logger: ((kind, msg, data) => {
+        this.log(`${kind}: ${msg}`, data)
+      }),
       params: {user_id: user_id}
     });
 
     socket.connect();
     this.socket = socket;
 
-    socket.onOpen( ev => this.log("OPEN", ev) );
-    socket.onError( ev => this.log("ERROR", ev) );
-    socket.onClose( e => this.log("CLOSE", e));
+    socket.onOpen(ev => this.log("OPEN", ev));
+    socket.onError(ev => this.log("ERROR", ev));
+    socket.onClose(e => this.log("CLOSE", e));
 
     this.chan = socket.channel("mmordie:game", {});
     this.chan.join()
@@ -45,8 +47,8 @@ class Sync {
     //});
   }
 
-  log(...args){
-    if (this.log_enabled){
+  log(...args) {
+    if (this.log_enabled) {
       console.log(...args);
     }
   }
@@ -55,7 +57,6 @@ class Sync {
     this.chan.push(this.UPDATE, {
         'id': this.userId,
         'position': player.world,
-        'options': {'tint': player.tint},
         'velocity': player.body.velocity
       }
     )
