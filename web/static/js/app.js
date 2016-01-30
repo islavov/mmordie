@@ -21,13 +21,13 @@ function initGame(){
 	);
 
 	function onPreload(){
-			game.load.image("hexagon", "images/hexagon.png");
+	game.load.image('tiles', 'images/tileset.png');
 	}
 
 	function onCreate() {
 		game.userID = uuid.v4();
 		game.sync = new Sync(this.userID);
-		this.game.world.setBounds(0, 0, 2000, 2000);
+		this.game.world.setBounds(0, 0, 2260, 2600);
 
 		game.state.add('GameState', GameState, false);
 		game.state.start('GameState');

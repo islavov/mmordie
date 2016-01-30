@@ -24,12 +24,13 @@ class GameState extends Phaser.State {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.create.texture('alien', ufo, 4, 4);
 
-    //this.map = this.game.add.tilemap();
+    this.map = this.game.add.tilemap();
 
-    //this.map.addTilesetImage('hexagon', 'hexagon');
+    this.map.addTilesetImage('tiles');
 
+    this.layer = this.map.create('level1', 40, 30, 32, 32);
     //this.layer = this.map.createLayer('Ground');
-    //this.layer.resizeWorld();
+    this.layer.resizeWorld();
 
     let center = {x: this.game.world.centerX, y: this.game.world.centerY};
 
