@@ -35,7 +35,7 @@ class GameState extends Phaser.State {
     this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
-    this.game.sync.chan.on('new:player_position', this.syncPositions.bind(this))
+    this.game.sync.chan.on(this.game.sync.UPDATE, this.syncPositions.bind(this))
   }
 
   initMap() {

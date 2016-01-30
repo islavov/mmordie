@@ -2,9 +2,12 @@ import {Socket} from "phoenix";
 
 class Sync {
 
-  constructor(user_id, onJoin){
+
+  constructor(user_id){
+    this.UPDATE = 'new:update';
+
     this.userId = user_id;
-    this.log_enabled = true;
+    this.log_enabled = false;
     let socket = new Socket("/socket", {
       logger: ((kind, msg, data) => { this.log(`${kind}: ${msg}`, data) })
     });
@@ -19,7 +22,7 @@ class Sync {
     this.chan = socket.channel("mmordie:game", {});
     this.chan.join()
       .receive("ignore", () => this.log("auth error"))
-      .receive("ok", (message) => onJoin(message));
+      .receive("ok", () => this.log("join ok"));
     this.chan.onError(e => this.log("something went wrong", e));
     this.chan.onClose(e => this.log("channel closed", e));
     //
@@ -48,7 +51,7 @@ class Sync {
   }
 
   syncPlayer(player){
-    this.chan.push("new:update", {'user': this.userId, 'position': player.world,
+    this.chan.push(this.UPDATE, {'user': this.userId, 'position': player.world,
                                            'options': {'tint': player.tint},
                                            'velocity': player.body.velocity}
     )
