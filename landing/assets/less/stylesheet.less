@@ -4,7 +4,10 @@
 @import "bootstrap/bootstrap.less";
 
 body {
-    background: #130e31;
+    background: #130e31 url(../images/page-bg.jpg);
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: 50% top;
     padding-top: @navbar-height + 20;
 }
 .navbar {
@@ -58,10 +61,33 @@ nav.navbar.shrink {
     margin-bottom: 100px;
     .animated-character {
         position: fixed;
+        img {
+            position: absolute;
+        }
     }
 }
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+.animate {
+    &.position {
+        -webkit-animation:spin 12s linear infinite;
+        -moz-animation:spin 12s linear infinite;
+        animation:spin 12s linear infinite;
+        z-index: 50;
+    }
+    &.character {
+        z-index: 100;
+    }
+}
+
 .call-to-action {
     margin-top: 80px;
+}
+.btn-cta {
+    font-size: 22px;
+    padding: 20px 40px;
 }
 .the-story {
     z-index: 200;
