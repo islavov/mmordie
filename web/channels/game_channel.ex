@@ -15,7 +15,7 @@ defmodule Mmordie.GameChannel do
   end
 
   def handle_info(:after_join, socket) do
-    push socket, "join", %{status: "connected"}
+    Game.on_join(socket)
     {:noreply, socket}
   end
 
@@ -27,11 +27,6 @@ defmodule Mmordie.GameChannel do
   def handle_in("new:update", msg, socket) do
     # update state
     Game.update(:client, msg)
-    # broadcast updated state of the world
-    # broadcast! socket, "new:player_position", %{user: msg["user"],
-    #                                             position: msg["position"],
-    #                                             options: msg["options"],
-    #                                             velocity: msg["velocity"], }
     {:noreply, socket}
   end
 end

@@ -4,7 +4,7 @@ class Sync {
 
   constructor(user_id){
     this.userId = user_id;
-    this.log_enabled = false;
+    this.log_enabled = true;
     let socket = new Socket("/socket", {
       logger: ((kind, msg, data) => { this.log(`${kind}: ${msg}`, data) })
     });
