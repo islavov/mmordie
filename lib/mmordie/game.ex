@@ -16,7 +16,9 @@ defmodule Mmordie.PlayerStats do
 end
 
 defmodule Mmordie.Player do
-  defstruct id: -1, position: %{x: 0, y: 0}, velocity: %{x: 0, y: 0}, stats: %Mmordie.PlayerStats{}
+  @sprites [:player1, :player2, :player3]
+
+  defstruct id: -1, position: %{x: 0, y: 0}, velocity: %{x: 0, y: 0}, stats: %Mmordie.PlayerStats{}, sprite: Enum.random(@sprites)
 end
 
 defmodule Mmordie.Map do
