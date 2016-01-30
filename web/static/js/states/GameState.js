@@ -24,13 +24,8 @@ class GameState extends Phaser.State {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.create.texture('alien', ufo, 4, 4);
 
-    this.map = this.game.add.tilemap();
 
-    this.map.addTilesetImage('tiles');
-
-    this.layer = this.map.create('level1', 40, 30, 32, 32);
-    //this.layer = this.map.createLayer('Ground');
-    this.layer.resizeWorld();
+    this.initMap();
 
     let center = {x: this.game.world.centerX, y: this.game.world.centerY};
 
@@ -41,6 +36,25 @@ class GameState extends Phaser.State {
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.game.sync.chan.on('new:player_position', this.syncPositions.bind(this))
+  }
+
+  initMap() {
+    this.map = this.game.add.tilemap();
+    this.map.addTilesetImage('tiles');
+
+    this.layer = this.map.create('level1', this.game.worldMap.x, this.game.worldMap.y, 256, 256);
+    //this.layer = this.map.createLayer('Ground');
+    var y = 0;
+    for (var i in this.game.worldMap.data){
+      if (i % this.game.worldMap.x == 0 && i != 0){
+        y +=1
+      }
+      var tile = this.game.worldMap.data[i];
+      var x = i % this.game.worldMap.x;
+      if (tile != 0 ){
+        this.map.putTile(tile-1, x, y);
+      }
+    }
   }
 
   update() {

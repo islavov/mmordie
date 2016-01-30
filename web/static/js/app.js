@@ -26,9 +26,16 @@ function initGame(){
 
 	function onCreate() {
 		game.userID = uuid.v4();
-		game.sync = new Sync(this.userID);
+		game.sync = new Sync(this.userID, onJoin);
 		this.game.world.setBounds(0, 0, 2260, 2600);
+	}
 
+	function onJoin(data){
+		game.worldMap = {
+			'x':6,
+			'y':6,
+			'data': [0,0,0,1,0,1,0,1,1,1,1,0]
+		};
 		game.state.add('GameState', GameState, false);
 		game.state.start('GameState');
 	}

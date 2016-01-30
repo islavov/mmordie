@@ -2,7 +2,7 @@ import {Socket} from "phoenix";
 
 class Sync {
 
-  constructor(user_id){
+  constructor(user_id, onJoin){
     this.userId = user_id;
     this.log_enabled = true;
     let socket = new Socket("/socket", {
@@ -19,7 +19,7 @@ class Sync {
     this.chan = socket.channel("mmordie:game", {});
     this.chan.join()
       .receive("ignore", () => this.log("auth error"))
-      .receive("ok", () => this.log("join ok"));
+      .receive("ok", (message) => onJoin(message));
     this.chan.onError(e => this.log("something went wrong", e));
     this.chan.onClose(e => this.log("channel closed", e));
     //
