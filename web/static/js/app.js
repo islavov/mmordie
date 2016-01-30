@@ -37,11 +37,11 @@ function initGame() {
     game.sync = new Sync(game.userID);
     game.sync.chan.on("join", onJoin);
     this.game.world.setBounds(0, 0, 2260, 2600);
-    game.add.tileSprite(0, 0, game.world.bounds.width, game.cache.getImage('background').height, 'background');
   }
 
   function onJoin(msg) {
     game.worldMap = msg.map;
+    game.playerInfo = msg.player;
     game.state.add('GameState', GameState, false);
     game.state.start('GameState');
   }
