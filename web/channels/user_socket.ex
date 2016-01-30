@@ -2,7 +2,7 @@ defmodule Mmordie.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  # channel "rooms:*", Mmordie.RoomChannel
+  channel "mmordie:*", Mmordie.GameChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
