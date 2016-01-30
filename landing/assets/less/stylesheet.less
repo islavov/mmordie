@@ -1,0 +1,79 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,700,400italic,700italic,300,300italic);
+
+@import "variables.less";
+@import "bootstrap/bootstrap.less";
+
+body {
+    background: #130e31;
+    padding-top: @navbar-height + 20;
+}
+.navbar {
+    background: none;
+    border-bottom-color: transparent;
+    .btn {
+        text-transform: uppercase;
+    }
+    .container {
+        padding-top: 41px;
+        padding-bottom: 41px;
+        -webkit-transition: all 0.3s ease;
+       transition: all 0.3s ease;
+    }
+    .navbar-brand {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+}
+nav.navbar.shrink {
+  min-height: 35px;
+  background: @navbar-inverse-bg;
+  border-bottom-color: @navbar-inverse-border;
+  .container {
+      padding-top: 15px;
+      padding-bottom: 15px;
+  }
+}
+#navigation.affix {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index:10;
+}
+.wrapper {
+    position: relative;
+    width: 100%;
+    &.light {
+        background: #fff;
+    }
+    &.transparent {
+        background: none;
+    }
+    &.hero {
+        color: #fff;
+        z-index: 100;
+    }
+}
+.hero {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    .animated-character {
+        position: fixed;
+    }
+}
+.call-to-action {
+    margin-top: 80px;
+}
+.the-story {
+    z-index: 200;
+    .container {
+        padding-top: 80px;
+        padding-bottom: 80px;
+    }
+}
+.the-gameplay {
+    z-index: 101;
+    .container {
+        padding-top: 80px;
+        padding-bottom: 80px;
+    }
+}
