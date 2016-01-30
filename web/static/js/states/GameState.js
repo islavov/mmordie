@@ -76,6 +76,7 @@ class GameState extends Phaser.State {
           //this.others[playerData.id].y = playerData.position.y;
           this.others[playerData.id].body.velocity.x = playerData.velocity.x;
           this.others[playerData.id].body.velocity.y = playerData.velocity.y;
+          this.others[playerData.id].setAngle();
         }
 
       }.bind(this));
@@ -83,10 +84,11 @@ class GameState extends Phaser.State {
     // Kill missing in action
     Object.keys(this.others).map(function (player_id){
       if (currentPlayers.indexOf(player_id) === -1){
-        this.others[player_id].kill();
+        this.others[player_id].destroy();
         delete this.others[player_id];
       }
     }.bind(this));
+
   }
 
   handleColission() {
