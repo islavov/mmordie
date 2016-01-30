@@ -1,12 +1,9 @@
 defmodule Mmordie.GameChannel do
-  alias Mmordie.Game.App, as: App
   use Phoenix.Channel
   require Logger
 
   def join("mmordie:game", message, socket) do
     Process.flag(:trap_exit, true)
-    # init the game state store
-    # start the game loop
     Logger.debug "> New Player: #{inspect message}"
     :timer.send_interval(4000, :update)
     {:ok, socket}
