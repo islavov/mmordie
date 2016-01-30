@@ -29,6 +29,7 @@ function initGame() {
     game.load.image('player1', 'images/player-01.png');
     game.load.image('player2', 'images/player-02.png');
     game.load.image('player3', 'images/player-03.png');
+    game.load.image('background', 'images/bgStars.png');
   }
 
   function onCreate() {
@@ -36,6 +37,7 @@ function initGame() {
     game.sync = new Sync(game.userID);
     game.sync.chan.on("join", onJoin);
     this.game.world.setBounds(0, 0, 2260, 2600);
+    game.add.tileSprite(0, 0, game.world.bounds.width, game.cache.getImage('background').height, 'background');
   }
 
   function onJoin(msg) {

@@ -18,7 +18,11 @@ end
 defmodule Mmordie.Player do
   @sprites [:player1, :player2, :player3]
 
-  defstruct id: -1, position: %{x: 0, y: 0}, velocity: %{x: 0, y: 0}, stats: %Mmordie.PlayerStats{}, sprite: Enum.random(@sprites)
+  defstruct id: -1, position: %{x: 0, y: 0}, velocity: %{x: 0, y: 0}, stats: %Mmordie.PlayerStats{}, sprite: nil
+
+  def get_random_sprite do
+    Enum.random(@sprites)
+  end
 end
 
 defmodule Mmordie.Map do
@@ -105,7 +109,8 @@ defmodule Mmordie.Game do
     player = %Mmordie.Player{
       id: player_id,
       position: %{x: :random.uniform(Mmordie.Map.size),
-                  y: :random.uniform(Mmordie.Map.size)}
+                  y: :random.uniform(Mmordie.Map.size)},
+      sprite: Mmordie.Player.get_random_sprite()
     }
     special = Enum.random((Mmordie.PlayerStats.get_special_types))
     stats = make_stats(special)
