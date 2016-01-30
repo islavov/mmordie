@@ -22,6 +22,10 @@ function initGame() {
 
   function onPreload() {
     game.load.image('tiles', 'images/grass-att1-big.png');
+    game.load.spritesheet('player1walk', 'images/animations/Player1Walk.png', 128, 128, 24);
+    game.load.spritesheet('player2walk', 'images/animations/Player2Walk.png', 128, 128, 24);
+    game.load.spritesheet('player3walk', 'images/animations/Player3Walk.png', 128, 128, 24);
+
     game.load.image('player1', 'images/player-01.png');
     game.load.image('player2', 'images/player-02.png');
     game.load.image('player3', 'images/player-03.png');

@@ -10,7 +10,7 @@ class GameState extends Phaser.State {
 
     this.others = {};
     this.enemies = this.game.add.physicsGroup();
-    this.player = new Player(this.game, center.x, center.y, 'player2');
+    this.player = new Player(this.game, center.x, center.y, 'player1');
     this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
 
     this.cursors = this.game.input.keyboard.createCursorKeys();

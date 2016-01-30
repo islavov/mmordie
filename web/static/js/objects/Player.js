@@ -16,7 +16,7 @@ class Player extends Phaser.Sprite {
 
   constructor(game, x, y, key) {
 
-    super(game, x, y, key);
+    super(game, x, y, `${key}walk`);
     this.anchor.setTo(0.5, 0.5);
     this.stats = {
       speed: 400,
@@ -25,7 +25,8 @@ class Player extends Phaser.Sprite {
       special: 10
     };
 
-
+    this.key = key;
+    this.animations.add(`${key}walk`);
     game.add.existing(this);
     game.physics.enable(this, Phaser.Physics.ARCADE);
 
@@ -62,23 +63,35 @@ class Player extends Phaser.Sprite {
       this.body.velocity.x = speed
     }
 
-    this.setAngle();
-
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.A))
     {
         this.attack();
     }
   }
 
-  setAngle() {
+  getDiretion(){
     var xid = this.body.velocity.x / Math.abs(this.body.velocity.x);
     var yid = this.body.velocity.y / Math.abs(this.body.velocity.y);
-    if (xid || yid) {
+    return {'x': xid, 'y': yid}
+  }
+
+  update(){
+    var direction = this.getDiretion();
+
+    // We are walking
+    if (direction.x || direction.y) {
+      this.animations.play(`${this.key}walk`, 24, true);
+      this.setAngle(direction.x, direction.y);
+    } else {
+      this.animations.stop()
+    }
+
+  }
+
+  setAngle(xid, yid) {
       var angle = `${xid || 0}${yid || 0}`;
       this.angle = ANGLES[angle];
-
     }
-  }
 
   attack() {
 
