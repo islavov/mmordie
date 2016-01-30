@@ -25,8 +25,6 @@ defmodule Mmordie.GameChannel do
   end
 
   def handle_in("new:update", msg, socket) do
-    # update state
-
     Game.update(:client, msg)
     {:noreply, socket}
   end

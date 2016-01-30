@@ -44,13 +44,16 @@ defmodule Mmordie.Game do
       # init world
       map = Mmordie.World.generate()
       set("map", map)
-      # init players
+      # init player
+      player = %Mmordie.Player{id: socket.id}
+      update_player(socket.id, player)
     end
 
     push socket, "join",  %{map: %{
                                x: 18,
                                y: 18,
-                               data: map}
+                               data: map},
+                            player: player
                            }
   end
 
