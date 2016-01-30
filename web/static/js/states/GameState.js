@@ -9,6 +9,7 @@ class GameState extends Phaser.State {
     let center = {x: this.game.world.centerX, y: this.game.world.centerY};
 
     this.others = {};
+    this.last_sync = this.game.time.totalElapsedSeconds();
     this.enemies = this.game.add.physicsGroup();
     this.player = new Player(this.game, center.x, center.y, this.game.playerInfo.sprite);
     this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
@@ -46,7 +47,7 @@ class GameState extends Phaser.State {
     this.game.sync.syncPlayer(this.player);
 
     if (this.game.physics.arcade.collide(this.player, this.enemies)) {
-      this.player.body.bounce.setTo(1, 1);
+      this.player.body.bounce.setTo(2, 2);
       this.player.inactive = true;
       this.game.time.events.add(Phaser.Timer.SECOND / 5, function () {
         this.player.inactive = false
@@ -77,8 +78,12 @@ class GameState extends Phaser.State {
           this.enemies.add(other_player);
         } else {
 
-          //this.others[playerData.id].x = playerData.position.x;
-          //this.others[playerData.id].y = playerData.position.y;
+          if (this.game.time.totalElapsedSeconds() - this.last_sync > Phaser.Timer.SECOND/2){
+            this.others[playerData.id].x = playerData.position.x;
+            this.others[playerData.id].y = playerData.position.y;
+
+          }
+
           this.others[playerData.id].body.velocity.x = playerData.velocity.x;
           this.others[playerData.id].body.velocity.y = playerData.velocity.y;
           this.others[playerData.id].setAngle();

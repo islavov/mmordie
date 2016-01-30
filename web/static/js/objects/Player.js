@@ -80,7 +80,7 @@ class Player extends Phaser.Sprite {
 
     // We are walking
     if (direction.x || direction.y) {
-      this.animations.play(`${this.key}walk`, 24, true);
+      this.animations.play(`${this.key}walk`, 22, true);
       this.setAngle(direction.x, direction.y);
     } else {
       this.animations.stop()
