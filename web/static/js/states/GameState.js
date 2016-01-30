@@ -95,8 +95,10 @@ class GameState extends Phaser.State {
   }
 
   syncPositions(syncData) {
+    var currentPlayers = [];
     syncData.players.map(
       function (playerData) {
+        currentPlayers.push(playerData.id);
         if (playerData.id == this.game.userID) {
           return;
         }
@@ -107,14 +109,22 @@ class GameState extends Phaser.State {
           this.others[playerData.id] = other_player;
           this.enemies.add(other_player);
         } else {
-          console.log(playerData.position.x, playerData.position.y);
-          this.others[playerData.id].x = playerData.position.x;
-          this.others[playerData.id].y = playerData.position.y;
+
+          //this.others[playerData.id].x = playerData.position.x;
+          //this.others[playerData.id].y = playerData.position.y;
           this.others[playerData.id].body.velocity.x = playerData.velocity.x;
           this.others[playerData.id].body.velocity.y = playerData.velocity.y;
         }
 
       }.bind(this));
+
+    // Kill missing in action
+    Object.keys(this.others).map(function (player_id){
+      if (currentPlayers.indexOf(player_id) === -1){
+        this.others[player_id].kill();
+        delete this.others[player_id];
+      }
+    });
   }
 
   handleColission() {

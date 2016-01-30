@@ -37,7 +37,7 @@ defmodule Mmordie.Game do
     Agent.update(:game_store, fn map -> Map.put(map, key, value) end)
   end
 
-  # game
+  ##### GAME EVENTS #####
   def on_join(socket) do
     map = get("map")
     unless map do
@@ -54,6 +54,11 @@ defmodule Mmordie.Game do
                            }
   end
 
+  def on_disconnect(user_id) do
+    players = Map.drop(get("players"), [user_id])
+    set("players", players)
+  end
+
   def update(:server, data) do
     send_response "new:update", %{players: Map.values(get("players"))}
   end
@@ -64,7 +69,7 @@ defmodule Mmordie.Game do
                               position: data["position"],
                               options: data["options"],
                               velocity: data["velocity"]}
-    players = Map.put_new(players, player.id, player)
+    players = Map.put(players, player.id, player)
     set("players", players)
   end
 

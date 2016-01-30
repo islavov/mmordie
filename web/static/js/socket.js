@@ -9,10 +9,11 @@ class Sync {
     this.userId = user_id;
     this.log_enabled = false;
     let socket = new Socket("/socket", {
-      logger: ((kind, msg, data) => { this.log(`${kind}: ${msg}`, data) })
+      logger: ((kind, msg, data) => { this.log(`${kind}: ${msg}`, data)}),
+      params: {user_id: user_id}
     });
 
-    socket.connect({user_id: user_id});
+    socket.connect();
     this.socket = socket;
 
     socket.onOpen( ev => this.log("OPEN", ev) );
