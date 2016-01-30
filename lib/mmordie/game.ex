@@ -1,3 +1,11 @@
+defmodule Mmordie.Player do
+  defstruct id: -1, position: {x: 0, y: 0}, velocity: {x: 0, y: 0}, options: %{}
+end
+
+defmodule Mmordie.World do
+  defstruct size: {x: 0, y: 0}
+end
+
 defmodule Mmordie.Game do
   require Logger
 
