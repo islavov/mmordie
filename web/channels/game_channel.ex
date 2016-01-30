@@ -1,5 +1,6 @@
 defmodule Mmordie.GameChannel do
   use Phoenix.Channel
+  alias Mmordie.Game
   require Logger
 
   def join("mmordie:game", message, socket) do
@@ -13,14 +14,8 @@ defmodule Mmordie.GameChannel do
     {:error, %{reason: "unauthorized"}}
   end
 
-  def handle_info({:after_join, msg}, socket) do
-    broadcast! socket, "user:entered", %{user: msg["user_id"]}
+  def handle_info(:after_join, socket) do
     push socket, "join", %{status: "connected"}
-    {:noreply, socket}
-  end
-
-  def handle_info(:update, socket) do
-    broadcast! socket, "new:msg", %{user: "SYSTEM", body: "ping"}
     {:noreply, socket}
   end
 
@@ -29,13 +24,14 @@ defmodule Mmordie.GameChannel do
     :ok
   end
 
-  def handle_in("new:player_position", msg, socket) do
-    #Logger.debug "> Player coordinates: #{inspect msg}"
-    broadcast! socket, "new:player_position", %{user: msg["user"],
-                                                position: msg["position"],
-                                                options: msg["options"],
-                                                velocity: msg["velocity"], }
-
-    {:reply, {:ok, %{msg: msg["body"]}}, assign(socket, :user, msg["user"])}
+  def handle_in("new:update", msg, socket) do
+    # update state
+    Game.update(:client, msg)
+    # broadcast updated state of the world
+    # broadcast! socket, "new:player_position", %{user: msg["user"],
+    #                                             position: msg["position"],
+    #                                             options: msg["options"],
+    #                                             velocity: msg["velocity"], }
+    {:noreply, socket}
   end
 end

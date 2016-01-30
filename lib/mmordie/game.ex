@@ -1,4 +1,6 @@
 defmodule Mmordie.Game do
+  require Logger
+
   def start_link do
     # start storage
     Agent.start_link(fn -> %{} end, name: :game_store)
@@ -14,7 +16,15 @@ defmodule Mmordie.Game do
     Agent.update(:game_store, fn map -> Map.put(map, key, value) end)
   end
 
-  def update do
-    IO.puts "update"
+  def update(:server, data) do
+    Logger.debug "Update server #{inspect data}"
+  end
+
+  def update(:client, data) do
+    Logger.debug "Update client #{inspect data}"
+    Mmordie.Endpoint.broadcast! "mmordie:game", "new:update", %{user: data["user"],
+                                                              position: data["position"],
+                                                              options: data["options"],
+                                                              velocity: data["velocity"]}
   end
 end

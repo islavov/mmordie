@@ -48,7 +48,7 @@ class Sync {
   }
 
   syncPlayer(player){
-    this.chan.push("new:player_position", {'user': this.userId, 'position': player.world,
+    this.chan.push("new:update", {'user': this.userId, 'position': player.world,
                                            'options': {'tint': player.tint},
                                            'velocity': player.body.velocity}
     )
