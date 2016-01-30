@@ -10,7 +10,7 @@ class GameState extends Phaser.State {
 
     this.others = {};
     this.enemies = this.game.add.physicsGroup();
-    this.player = new Player(this.game, center.x, center.y, 'player');
+    this.player = new Player(this.game, center.x, center.y, 'player2');
     this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -67,7 +67,7 @@ class GameState extends Phaser.State {
 
         if (typeof this.others[playerData.id] === 'undefined') {
           var other_player = new Enemy(this.game,
-            playerData.position.x, playerData.position.y, 'player');
+            playerData.position.x, playerData.position.y, 'player3');
           this.others[playerData.id] = other_player;
           this.enemies.add(other_player);
         } else {
