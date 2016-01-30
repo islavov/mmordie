@@ -10,7 +10,7 @@ class GameState extends Phaser.State {
 
     this.others = {};
     this.enemies = this.game.add.physicsGroup();
-    this.player = new Player(this.game, center.x, center.y, 'player');
+    this.player = new Player(this.game, center.x, center.y, this.game.playerInfo.sprite);
     this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -18,18 +18,23 @@ class GameState extends Phaser.State {
   }
 
   initMap() {
+    this.game.add.tileSprite(0, 0,
+      this.game.world.bounds.width,
+      this.game.cache.getImage('background').height,
+      'background');
+
     this.map = this.game.add.tilemap();
     this.map.addTilesetImage('tiles', null, 256, 256);
 
-    this.layer = this.map.create('base', this.game.worldMap.x, this.game.worldMap.y, 256, 256);
+    this.layer = this.map.create('base', this.game.worldMap.size.x, this.game.worldMap.size.y, 256, 256);
     //this.layer = this.map.createLayer('Ground');
     var y = 0;
     for (var i in this.game.worldMap.data) {
-      if (i % this.game.worldMap.x == 0 && i != 0) {
+      if (i % this.game.worldMap.size.x == 0 && i != 0) {
         y += 1
       }
       var tile = this.game.worldMap.data[i];
-      var x = i % this.game.worldMap.x;
+      var x = i % this.game.worldMap.size.x;
       if (tile != 0) {
         this.map.putTile(tile - 1, x, y, this.layer);
       }
@@ -67,7 +72,7 @@ class GameState extends Phaser.State {
 
         if (typeof this.others[playerData.id] === 'undefined') {
           var other_player = new Enemy(this.game,
-            playerData.position.x, playerData.position.y, 'player');
+            playerData.position.x, playerData.position.y, playerData.sprite);
           this.others[playerData.id] = other_player;
           this.enemies.add(other_player);
         } else {
