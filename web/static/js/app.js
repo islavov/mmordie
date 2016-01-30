@@ -22,6 +22,7 @@ function initGame(){
 
 	function onPreload(){
 		game.load.image('tiles', 'images/grass-att1-big.png');
+		game.load.image('player', 'images/player.png');
 	}
 
 	function onCreate() {
