@@ -26,8 +26,9 @@ class GameState extends Phaser.State {
     this.game.create.texture('alien', ufo, 6, 6);
 
 
+		this.game.world.setBounds(0, 0, 2000, 2000);
     let center = { x: this.game.world.centerX, y: this.game.world.centerY };
-		this.game.world.setBounds(0, 0, 1000, 1000);
+
     this.others = {};
     this.enemies = this.game.add.physicsGroup();
 		this.player = new Player(this.game, center.x, center.y, 'alien');
@@ -42,7 +43,15 @@ class GameState extends Phaser.State {
 		this.game.sync.syncPlayer(this.player);
     var speed = 400;
 
-    console.log(this.game.physics.arcade.collide(this.player, this.enemies));
+    if (this.game.physics.arcade.collide(this.player, this.enemies)){
+      this.player.body.bounce.setTo(1, 1);
+      this.player.inactive = true;
+      this.game.time.events.add(Phaser.Timer.SECOND / 5, function(){this.player.inactive = false}, this);
+    }
+
+    if (this.player.inactive){
+      return
+    }
 
     this.player.body.velocity.x = 0;
     this.player.body.velocity.y = 0;
@@ -83,6 +92,10 @@ class GameState extends Phaser.State {
       this.others[playerData.user].body.velocity.x = playerData.velocity.x;
       this.others[playerData.user].body.velocity.y = playerData.velocity.y;
     }
+  }
+
+  handleColission() {
+
   }
 
 	render() {
