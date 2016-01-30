@@ -38,9 +38,11 @@ defmodule Mmordie.Game do
   def on_join(socket) do
     map = get("map")
     unless map do
-      Logger.debug "generating a new world"
+      # init world
       map = Mmordie.World.generate()
       set("map", map)
+      # init players
+      set("players", %{})
     end
 
     push socket, "join",  %{map: %{
@@ -52,14 +54,17 @@ defmodule Mmordie.Game do
 
   def update(:server, data) do
     Logger.debug "Update server #{inspect data}"
+    send_response "new:update", %{players: get("players")}
   end
 
   def update(:client, data) do
-
-    send_response "new:update",  %{user: data["user"],
-                                   position: data["position"],
-                                   options: data["options"],
-                                   velocity: data["velocity"]}
+    players = get("players")
+    player =  %Mmordie.Player{id: data["user"],
+                              position: data["position"],
+                              options: data["options"],
+                              velocity: data["velocity"]}
+    players = Map.put_new(players, player.id, player)
+    set("players", players)
   end
 
   defp send_response(response_type, data) do
