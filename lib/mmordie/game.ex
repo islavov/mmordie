@@ -26,8 +26,8 @@ defmodule Mmordie.Game do
   end
 
   # storage
-  def get(value) do
-    Agent.get(:game_store, fn map -> Map.get(map, value) end)
+  def get(key) do
+    Agent.get(:game_store, fn map -> Map.get(map, key) end)
   end
 
   def set(key, value) do
@@ -36,11 +36,17 @@ defmodule Mmordie.Game do
 
   # game
   def on_join(socket) do
-    world = Mmordie.World.generate()
+    map = get("map")
+    unless map do
+      Logger.debug "generating a new world"
+      map = Mmordie.World.generate()
+      set("map", map)
+    end
+
     push socket, "join",  %{map: %{
                                x: 18,
                                y: 18,
-                               data: world}
+                               data: map}
                            }
   end
 
@@ -49,7 +55,7 @@ defmodule Mmordie.Game do
   end
 
   def update(:client, data) do
-    Logger.debug "Update client #{inspect data}"
+
     send_response "new:update",  %{user: data["user"],
                                    position: data["position"],
                                    options: data["options"],
