@@ -86,7 +86,7 @@ class GameState extends Phaser.State {
         this.others[player_id].kill();
         delete this.others[player_id];
       }
-    });
+    }.bind(this));
   }
 
   handleColission() {
@@ -96,7 +96,7 @@ class GameState extends Phaser.State {
   render() {
     //this.game.debug.bodyInfo(this.player, 96, 96);
     //this.game.debug.body(this.player);
-
+    this.game.debug.text(`Active enemies: ${this.enemies.length}`, 100, 380 );
     this.game.debug.cameraInfo(this.game.camera, 32, 32);
     this.game.debug.spriteCoords(this.player, 32, 500);
 
