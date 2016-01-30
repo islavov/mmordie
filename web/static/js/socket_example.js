@@ -14,9 +14,9 @@ class App {
     var input     = document.getElementById("message-input");
     var username  = document.getElementById("username");
 
-    socket.onOpen( ev => console.log("OPEN", ev) )
-    socket.onError( ev => console.log("ERROR", ev) )
-    socket.onClose( e => console.log("CLOSE", e))
+    socket.onOpen( ev => console.log("OPEN", ev) );
+    socket.onError( ev => console.log("ERROR", ev) );
+    socket.onClose( e => console.log("CLOSE", e));
 
     var chan = socket.channel("mmordie:game", {})
     chan.join().receive("ignore", () => console.log("auth error"))

@@ -1,32 +1,27 @@
-import "phoenix_html";
 import {Socket} from "phoenix";
-
 
 class Sync {
 
-  constructor(){
+  constructor(user_id){
+    this.userId = user_id;
+    this.log_enabled = false;
     let socket = new Socket("/socket", {
-      logger: ((kind, msg, data) => { console.log(`${kind}: ${msg}`, data) })
+      logger: ((kind, msg, data) => { this.log(`${kind}: ${msg}`, data) })
     });
 
-    socket.connect({user_id: "123"});
+    socket.connect({user_id: user_id});
     this.socket = socket;
 
-    var status    = document.getElementById("status");
-    var messages  = document.getElementById("messages");
-    var input     = document.getElementById("message-input");
-    var username  = document.getElementById("username");
+    socket.onOpen( ev => this.log("OPEN", ev) );
+    socket.onError( ev => this.log("ERROR", ev) );
+    socket.onClose( e => this.log("CLOSE", e));
 
-    socket.onOpen( ev => console.log("OPEN", ev) )
-    socket.onError( ev => console.log("ERROR", ev) )
-    socket.onClose( e => console.log("CLOSE", e))
-
-    this.chan = socket.channel("mmordie:game", {})
-    this.chan.join().receive("ignore", () => console.log("auth error"))
-               .receive("ok", () => console.log("join ok"))
-               .after(10000, () => console.log("Connection interruption"))
-    this.chan.onError(e => console.log("something went wrong", e))
-    this.chan.onClose(e => console.log("channel closed", e))
+    this.chan = socket.channel("mmordie:game", {});
+    this.chan.join()
+      .receive("ignore", () => this.log("auth error"))
+      .receive("ok", () => this.log("join ok"));
+    this.chan.onError(e => this.log("something went wrong", e));
+    this.chan.onClose(e => this.log("channel closed", e));
     //
     //input.off("keypress").on("keypress", e => {
     //  if (e.keyCode == 13) {
@@ -46,7 +41,18 @@ class Sync {
     //});
   }
 
-  sync_player(player){
-    chan.push("new:player_position", {})
+  log(...args){
+    if (this.log_enabled){
+      console.log(...args);
+    }
+  }
+
+  syncPlayer(player){
+    this.chan.push("new:player_position", {'user': this.userId, 'position': player.world,
+                                           'options': {'tint': player.tint},
+                                           'velocity': player.body.velocity}
+    )
   }
 }
+
+export default Sync;

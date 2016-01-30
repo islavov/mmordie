@@ -7,7 +7,8 @@ defmodule Mmordie.GameChannel do
     Process.flag(:trap_exit, true)
     # init the game state store
     # start the game loop
-    :timer.send_interval(40, :update)
+    Logger.debug "> New Player: #{inspect message}"
+    :timer.send_interval(4000, :update)
     {:ok, socket}
   end
 
@@ -16,7 +17,7 @@ defmodule Mmordie.GameChannel do
   end
 
   def handle_info({:after_join, msg}, socket) do
-    broadcast! socket, "user:entered", %{user: msg["user"]}
+    broadcast! socket, "user:entered", %{user: msg["user_id"]}
     push socket, "join", %{status: "connected"}
     {:noreply, socket}
   end
@@ -31,8 +32,13 @@ defmodule Mmordie.GameChannel do
     :ok
   end
 
-  def handle_in("new:msg", msg, socket) do
-    broadcast! socket, "new:msg", %{user: msg["user"], body: msg["body"]}
+  def handle_in("new:player_position", msg, socket) do
+    #Logger.debug "> Player coordinates: #{inspect msg}"
+    broadcast! socket, "new:player_position", %{user: msg["user"],
+                                                position: msg["position"],
+                                                options: msg["options"],
+                                                velocity: msg["velocity"], }
+
     {:reply, {:ok, %{msg: msg["body"]}}, assign(socket, :user, msg["user"])}
   end
 end

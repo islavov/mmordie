@@ -7,7 +7,7 @@ use Mix.Config
 
 # Configures the endpoint
 config :mmordie, Mmordie.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "0.0.0.0"],
   root: Path.dirname(__DIR__),
   secret_key_base: "rraSc8Q6wDsF1TdkhD/8QOOoX0dVP/giNt7Dy+TIT/K/oqqEzTtJ+h89rF4zn30U",
   render_errors: [accepts: ~w(html json)],

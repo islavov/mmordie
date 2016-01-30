@@ -7,8 +7,7 @@ exports.config = {
       // To use a separate vendor.js bundle, specify two files path
       // https://github.com/brunch/brunch/blob/stable/docs/config.md#files
        joinTo: {
-        //"js/phaser.js": /^(node_modules\/phaser\/phaser.js)/,
-        "js/vendor.js": /^(web\/static\/vendor)/,
+        "js/vendor.js": /^(web\/static\/vendor)|node_modules/,
         "js/app.js": /^(web\/static\/js)/
        }
       //
@@ -66,6 +65,6 @@ exports.config = {
     enabled: true,
     // Whitelist the npm deps to be pulled in as front-end assets.
     // All other deps in package.json will be excluded from the bundle.
-    whitelist: ["phoenix", "phoenix_html", "phaser"]
+    whitelist: ["phoenix", "phoenix_html", "node-uuid"]
   }
 };

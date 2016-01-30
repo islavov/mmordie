@@ -1,17 +1,19 @@
 
 class Player extends window.Phaser.Sprite {
 
-	constructor(game, x, y, key, frame) {
+	constructor(game, x, y, key, tint) {
 
-		super(game, x, y, key, frame);
+		super(game, x, y, key, tint);
 
-		this.tint = Math.random() * 0xffffff;
-	  game.physics.p2.enable(this);
+		this.tint = tint || Math.random() * 0xffffff;
 		game.add.existing(this);
-	 	game.camera.follow(this, Phaser.Camera.FOLLOW_PLATFORMER);
-
+		game.physics.enable(this, Phaser.Physics.ARCADE);
+		this.body.collideWorldBounds = true;
+		this.body.mass = 1000;
 	}
 
 }
 
 export default Player;
+
+
