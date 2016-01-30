@@ -40,9 +40,9 @@ class GameState extends Phaser.State {
 
   initMap() {
     this.map = this.game.add.tilemap();
-    this.map.addTilesetImage('tiles');
+    this.map.addTilesetImage('tiles', null, 256, 256);
 
-    this.layer = this.map.create('level1', this.game.worldMap.x, this.game.worldMap.y, 256, 256);
+    this.layer = this.map.create('base', this.game.worldMap.x, this.game.worldMap.y, 256, 256);
     //this.layer = this.map.createLayer('Ground');
     var y = 0;
     for (var i in this.game.worldMap.data){
@@ -52,7 +52,7 @@ class GameState extends Phaser.State {
       var tile = this.game.worldMap.data[i];
       var x = i % this.game.worldMap.x;
       if (tile != 0 ){
-        this.map.putTile(tile-1, x, y);
+        this.map.putTile(tile-1, x, y, this.layer);
       }
     }
   }

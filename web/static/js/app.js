@@ -21,7 +21,7 @@ function initGame(){
 	);
 
 	function onPreload(){
-	game.load.image('tiles', 'images/tileset.png');
+		game.load.image('tiles', 'images/grass-att1-big.png');
 	}
 
 	function onCreate() {
