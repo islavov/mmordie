@@ -76,7 +76,10 @@ defmodule Mmordie.Game do
 
     # init player
     player = make_player(socket.id)
-    Logger.debug "#{inspect player}"
+    players = get("players")
+    players = Map.put(players, player.id, player)
+    set("players", players)
+
     push socket, "join",  %{map: map,
                             player: player
                            }
@@ -124,11 +127,13 @@ defmodule Mmordie.Game do
 
   defp update_player(player_id, player_data) do
     players = get("players")
-    player =  %Mmordie.Player{id: player_id,
-                              position: player_data["position"],
-                              stats: player_data["stats"],
-                              velocity: player_data["velocity"]}
-    players = Map.put(players, player_id, player)
+    player = Map.get(players, player_id)
+    updated_player = %Mmordie.Player{id: player_id,
+                                     position: player_data["position"],
+                                     stats: player_data["stats"],
+                                     velocity: player_data["velocity"],
+                                     sprite: player.sprite}
+    players = Map.put(players, player_id, updated_player)
     set("players", players)
   end
 
