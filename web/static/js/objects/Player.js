@@ -24,16 +24,17 @@ class Player extends Phaser.Sprite {
       damage: 10,
       special: 10
     };
+    this.is_attacking = false;
 
     this.key = key;
     this.animations.add(`${key}walk`);
     game.add.existing(this);
     game.physics.enable(this, Phaser.Physics.ARCADE);
 
-    //this.weapon = new Phaser.Sprite(game, this.body.x + 16, this.body.y + 16);
-    //this.weapon.scale.set(1, 5);
-    //game.physics.enable(this.weapon, Phaser.Physics.ARCADE);
-    //game.add.existing(this.weapon);
+    this.weapon = new Phaser.Sprite(game, this.body.x, this.body.y);
+    this.weapon.scale.set(3, 3);
+    game.physics.enable(this.weapon, Phaser.Physics.ARCADE);
+    game.add.existing(this.weapon);
 
     this.body.collideWorldBounds = true;
     this.body.mass = 1000;
@@ -63,7 +64,12 @@ class Player extends Phaser.Sprite {
       this.body.velocity.x = speed
     }
 
-    if (this.game.input.keyboard.isDown(Phaser.Keyboard.A))
+    if (!this.is_attacking){
+      this.weapon.body.x = this.body.x;
+      this.weapon.body.y = this.body.y;
+    }
+
+    if (this.game.input.keyboard.isDown(Phaser.Keyboard.A) && !this.is_attacking)
     {
         this.attack();
     }
@@ -94,11 +100,14 @@ class Player extends Phaser.Sprite {
     }
 
   attack() {
-
-    //this.weapon.reset(this.body.x - 20, this.body.y - 20);
-
-    //this.game.physics.arcade.velocityFromRotation(this.rotation, 400, this.weapon.body.velocity);
-
+    this.is_attacking = true;
+    this.weapon.reset(this.body.x, this.body.y);
+    this.weapon.scale.set(3, 3);
+    this.weapon.lifespan = 50;
+    this.game.physics.arcade.velocityFromAngle(this.angle+90, 1600, this.weapon.body.velocity);
+    this.game.time.events.add(400, function () {
+        this.is_attacking = false;
+      }.bind(this));
   }
 
 }

@@ -12,6 +12,7 @@ class GameState extends Phaser.State {
     this.last_sync = this.game.time.totalElapsedSeconds();
     this.enemies = this.game.add.physicsGroup();
     this.player = new Player(this.game, center.x, center.y, this.game.playerInfo.sprite);
+    this.player.id = this.game.playerInfo.id;
     this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
@@ -46,17 +47,26 @@ class GameState extends Phaser.State {
 
     this.game.sync.syncPlayer(this.player);
 
-    if (this.game.physics.arcade.collide(this.player, this.enemies)) {
-      this.player.body.bounce.setTo(2, 2);
-      this.player.inactive = true;
-      this.game.time.events.add(Phaser.Timer.SECOND / 5, function () {
-        this.player.inactive = false
-      }, this);
+    if (this.player.is_attacking){
+      this.game.physics.arcade.overlap(
+        this.player.weapon,
+        this.enemies,
+        function collisionHandler(sprite1, sprite2){
+          sprite2.takeHit(sprite1.stats.damage)
+        }
+      )
     }
 
-    if (this.player.inactive) {
-      return
-    }
+    //  this.player.body.bounce.setTo(2, 2);
+    //  this.player.inactive = true;
+    //  this.game.time.events.add(Phaser.Timer.SECOND / 5, function () {
+    //    this.player.inactive = false
+    //  }, this);
+    //}
+
+    //if (this.player.inactive) {
+    //  return
+    //}
 
     this.player.move(this.cursors);
 
@@ -74,6 +84,7 @@ class GameState extends Phaser.State {
         if (typeof this.others[playerData.id] === 'undefined') {
           var other_player = new Enemy(this.game,
             playerData.position.x, playerData.position.y, playerData.sprite);
+          other_player.id = playerData.id;
           this.others[playerData.id] = other_player;
           this.enemies.add(other_player);
         } else {
@@ -81,13 +92,13 @@ class GameState extends Phaser.State {
           if (this.game.time.totalElapsedSeconds() - this.last_sync > Phaser.Timer.SECOND/2){
             this.others[playerData.id].x = playerData.position.x;
             this.others[playerData.id].y = playerData.position.y;
-
           }
 
           this.others[playerData.id].body.velocity.x = playerData.velocity.x;
           this.others[playerData.id].body.velocity.y = playerData.velocity.y;
           this.others[playerData.id].setAngle();
         }
+        other_player.setStats(playerData.stats);
 
       }.bind(this));
 
@@ -106,11 +117,11 @@ class GameState extends Phaser.State {
   }
 
   render() {
-    //this.game.debug.bodyInfo(this.player, 96, 96);
-    //this.game.debug.body(this.player);
+    this.game.debug.bodyInfo(this.player.weapon, 96, 96);
+    this.game.debug.body(this.player.weapon);
     this.game.debug.text(`Active enemies: ${this.enemies.length}`, 100, 380);
-    this.game.debug.cameraInfo(this.game.camera, 32, 32);
-    this.game.debug.spriteCoords(this.player, 32, 500);
+    //this.game.debug.cameraInfo(this.game.camera, 32, 32);
+    //this.game.debug.spriteCoords(this.player, 32, 500);
 
   }
 

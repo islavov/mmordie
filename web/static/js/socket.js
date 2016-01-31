@@ -55,7 +55,7 @@ class Sync {
 
   syncPlayer(player) {
     this.chan.push(this.UPDATE, {
-        'id': this.userId,
+        'id': player.id,
         'position': player.world,
         'velocity': player.body.velocity
       }
