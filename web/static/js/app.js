@@ -21,11 +21,10 @@ function initGame() {
   );
 
   function onPreload() {
-    game.load.image('tiles', 'images/grass-att1-big.png');
     game.load.spritesheet('player1walk', 'images/animations/Player1Walk.png', 128, 128, 24);
     game.load.spritesheet('player2walk', 'images/animations/Player2Walk.png', 128, 128, 24);
     game.load.spritesheet('player3walk', 'images/animations/Player3Walk.png', 128, 128, 24);
-    
+
     game.load.spritesheet('player1hit', 'images/animations/Player1Hit.png', 128, 128, 24);
     game.load.spritesheet('player2hit', 'images/animations/Player2Hit.png', 128, 128, 24);
     game.load.spritesheet('player3hit', 'images/animations/Player3Hit.png', 128, 128, 24);
@@ -38,13 +37,15 @@ function initGame() {
     game.load.image('player2', 'images/player-02.png');
     game.load.image('player3', 'images/player-03.png');
     game.load.image('background', 'images/bgStars.png');
+
+    game.load.image('terrain', 'images/terrrain.png');
   }
 
   function onCreate() {
     game.userID = uuid.v4();
     game.sync = new Sync(game.userID);
     game.sync.chan.on("join", onJoin);
-    this.game.world.setBounds(0, 0, 2260, 2600);
+    this.game.world.setBounds(0, 0, 18*128, 18*128);
   }
 
   function onJoin(msg) {
