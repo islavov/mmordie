@@ -43,13 +43,15 @@ defmodule Mmordie.Player do
   def update(player_id, player_data) do
     players = Mmordie.Game.get("players")
     player = Map.get(players, player_id)
-    updated_player = %Mmordie.Player{id: player_id,
+    if player do
+        updated_player = %Mmordie.Player{id: player_id,
                                      position: player_data["position"],
                                      velocity: player_data["velocity"],
                                      action: player_data["action"],
                                      sprite: player.sprite
                                      }
-    players = Map.put(players, player_id, updated_player)
-    Mmordie.Game.set("players", players)
+        players = Map.put(players, player_id, updated_player)
+        Mmordie.Game.set("players", players)
+    end
   end
 end

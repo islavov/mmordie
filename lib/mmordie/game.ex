@@ -26,21 +26,26 @@ defmodule Mmordie.Game do
   end
 
   def init_player(player_id) do
-    Logger.debug("New player #{player_id}")
-    player = Mmordie.Player.new(player_id)
-    players = get("players")
-    players = Map.put(players, player.id, player)
-    set("players", players)
-    player
+    if (player_id != :ok) do
+        Logger.debug("New player #{player_id}")
+        player = Mmordie.Player.new(player_id)
+        players = get("players")
+        players = Map.put(players, player.id, player)
+        set("players", players)
+        player
+    end
+
   end
 
   def init_player_stats(player_id) do
     # what is this???
-    stats = Mmordie.PlayerStats.new(player_id)
-    statsmap = get("stats")
-    statsmap = Map.put(statsmap, player_id, stats)
-    set("stats", statsmap)
-    stats
+    if (player_id != :ok) do
+        stats = Mmordie.PlayerStats.new(player_id)
+        statsmap = get("stats")
+        statsmap = Map.put(statsmap, player_id, stats)
+        set("stats", statsmap)
+        stats
+    end
   end
 
   ##### GAME EVENTS #####
@@ -69,7 +74,7 @@ defmodule Mmordie.Game do
   end
 
   def raise_dead(player_id, timestamp) do
-    if (timestamp + 2 < :os.system_time(:seconds)) do
+    if (timestamp + 1 < :os.system_time(:seconds)) do
         init_player(player_id)
         init_player_stats(player_id)
 
