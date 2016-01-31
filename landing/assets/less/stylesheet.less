@@ -72,8 +72,13 @@ nav.navbar.shrink {
     margin-bottom: 100px;
     .animated-character {
         position: fixed;
+        top: 180px;
+        transition: top 2s ease-in;
         img {
             position: absolute;
+        }
+        &.fixed {
+            top: 40%;
         }
     }
 }

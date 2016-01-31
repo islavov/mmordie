@@ -4,6 +4,11 @@ $(window).scroll(function() {
   } else {
     $('#main-nav').removeClass('shrink');
   }
+  if ($(document).scrollTop() > 400) {
+    $('#animatedCharacter').addClass('fixed');
+  } else {
+    $('#animatedCharacter').removeClass('fixed');
+  }
 });
 var img = $('.animate.character');
 if(img.length > 0){
