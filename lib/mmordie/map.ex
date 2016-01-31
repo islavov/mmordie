@@ -3,6 +3,10 @@ defmodule Mmordie.Map do
 
   defstruct size: %{x: @size, y: @size}, data: nil
 
+  def size do
+    @size
+  end
+
   def new(size \\ @size) do
     %Mmordie.Map{size: %{x: size, y: size}, data: make_terrain(size)}
   end
