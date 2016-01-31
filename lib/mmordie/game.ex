@@ -1,19 +1,3 @@
-defmodule Mmordie.Map do
-  @size 18
-
-  defstruct size: %{x: @size, y: @size}, data: nil
-
-  def make_map do
-    for _n <- 1..@size*@size do
-      Enum.random([0,1])
-    end
-  end
-
-  def size do
-    @size
-  end
-end
-
 defmodule Mmordie.Game do
   use Phoenix.Channel
   require Logger
@@ -44,8 +28,8 @@ defmodule Mmordie.Game do
   def on_join(socket) do
     map = get("map")
     unless map do
-      # init world
-      map = %Mmordie.Map{data: Mmordie.Map.make_map()}
+      # init map
+      map = Mmordie.Map.new()
       set("map", map)
     end
 
@@ -55,6 +39,7 @@ defmodule Mmordie.Game do
     players = Map.put(players, player.id, player)
     set("players", players)
 
+    # what is this???
     stats = Mmordie.PlayerStats.new(socket.id)
     statsmap = get("stats")
     statsmap = Map.put(statsmap, player.id, stats)
