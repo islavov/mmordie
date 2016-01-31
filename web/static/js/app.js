@@ -36,7 +36,7 @@ function initGame() {
     game.load.image('player1', 'images/player-01.png');
     game.load.image('player2', 'images/player-02.png');
     game.load.image('player3', 'images/player-03.png');
-    game.load.image('background', 'images/bgStars.png');
+    game.load.image('background', 'images/bgStars.jpg');
 
     game.load.image('terrain', 'images/terrrain.png');
   }
