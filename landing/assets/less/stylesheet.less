@@ -96,8 +96,12 @@ nav.navbar.shrink {
 .call-to-action {
     margin-top: 80px;
 }
-.btn-cta {
+.btn {
+    transition: background-color 0.2s ease-in, color 0.2s ease-in;
+}
+.btn-cta, .btn-cta:active {
     font-size: 22px;
+    font-weight: 700;
     padding: 20px 80px 20px 40px;
     background-image: url(../images/arrow-right.svg);
     background-position: right 20px center;
