@@ -65,14 +65,27 @@ class Player extends Phaser.Sprite {
     }
 
     if (!this.is_attacking){
-      this.weapon.body.x = this.body.x;
-      this.weapon.body.y = this.body.y;
+      this.weapon.body.x = this.body.x+16;
+      this.weapon.body.y = this.body.y+16;
     }
 
     if (this.game.input.keyboard.isDown(Phaser.Keyboard.A) && !this.is_attacking)
     {
         this.attack();
     }
+  }
+
+  setAction(action){
+    if (action === 'attack' && !this.is_attacking){
+      this.playAttack()
+    }
+  }
+
+  getAction(){
+    if (this.is_attacking){
+      return 'attack';
+    }
+    return 'move';
   }
 
   getDiretion(){
@@ -82,32 +95,50 @@ class Player extends Phaser.Sprite {
   }
 
   update(){
-    var direction = this.getDiretion();
+    this.setAngle();
+    var direction = this.getDiretion()
+
+    if (this.is_attacking){
+      return
+    }
 
     // We are walking
     if (direction.x || direction.y) {
       this.animations.play(`${this.key}walk`, 22, true);
-      this.setAngle(direction.x, direction.y);
     } else {
-      this.animations.stop()
+      this.animations.add(`${this.key}idle`);
+      this.animations.play(`${this.key}idle`, 22, true);
     }
 
   }
 
-  setAngle(xid, yid) {
-      var angle = `${xid || 0}${yid || 0}`;
+  setAngle() {
+    var direction = this.getDiretion();
+
+    if (direction.x || direction.y) {
+      var angle = `${direction.x || 0}${direction.y || 0}`;
       this.angle = ANGLES[angle];
     }
+  }
 
   attack() {
-    this.is_attacking = true;
-    this.weapon.reset(this.body.x, this.body.y);
+    this.weapon.reset(this.body.x+16, this.body.y+16);
     this.weapon.scale.set(3, 3);
     this.weapon.lifespan = 50;
     this.game.physics.arcade.velocityFromAngle(this.angle+90, 1600, this.weapon.body.velocity);
-    this.game.time.events.add(400, function () {
-        this.is_attacking = false;
-      }.bind(this));
+
+    this.playAttack();
+
+
+  }
+  playAttack(){
+    this.is_attacking = true;
+    this.animations.add(`${this.key}hit`);
+    this.animations.play(`${this.key}hit`, 22, false);
+    this.game.time.events.add(200, function () {
+      this.is_attacking = false;
+
+    }.bind(this));
   }
 
 }

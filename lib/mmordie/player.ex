@@ -2,7 +2,7 @@ defmodule Mmordie.Player do
   require Logger
   @sprites [:player1, :player2, :player3]
 
-  defstruct id: -1, position: %{x: 0, y: 0}, velocity: %{x: 0, y: 0}, sprite: nil
+  defstruct id: -1, position: %{x: 0, y: 0}, velocity: %{x: 0, y: 0}, sprite: nil, action: "move"
 
   def get_random_sprite do
     Enum.random(@sprites)
@@ -42,7 +42,9 @@ defmodule Mmordie.Player do
     updated_player = %Mmordie.Player{id: player_id,
                                      position: player_data["position"],
                                      velocity: player_data["velocity"],
-                                     sprite: player.sprite}
+                                     action: player_data["action"],
+                                     sprite: player.sprite
+                                     }
     players = Map.put(players, player_id, updated_player)
     Mmordie.Game.set("players", players)
   end

@@ -6,8 +6,8 @@ import uuid from 'node-uuid';
 
 
 function initGame() {
-  var w = window.innerWidth * window.devicePixelRatio;
-  var h = window.innerHeight * window.devicePixelRatio;
+  var w = window.innerWidth;
+  var h = window.innerHeight;
 
   var game = new Phaser.Game(
     (h > w) ? h : w,
@@ -25,6 +25,14 @@ function initGame() {
     game.load.spritesheet('player1walk', 'images/animations/Player1Walk.png', 128, 128, 24);
     game.load.spritesheet('player2walk', 'images/animations/Player2Walk.png', 128, 128, 24);
     game.load.spritesheet('player3walk', 'images/animations/Player3Walk.png', 128, 128, 24);
+    
+    game.load.spritesheet('player1hit', 'images/animations/Player1Hit.png', 128, 128, 24);
+    game.load.spritesheet('player2hit', 'images/animations/Player2Hit.png', 128, 128, 24);
+    game.load.spritesheet('player3hit', 'images/animations/Player3Hit.png', 128, 128, 24);
+
+    game.load.spritesheet('player1idle', 'images/animations/Player1Idle.png', 128, 128, 24);
+    game.load.spritesheet('player2idle', 'images/animations/Player2Idle.png', 128, 128, 24);
+    game.load.spritesheet('player3idle', 'images/animations/Player3Idle.png', 128, 128, 24);
 
     game.load.image('player1', 'images/player-01.png');
     game.load.image('player2', 'images/player-02.png');
@@ -43,7 +51,6 @@ function initGame() {
     game.worldMap = msg.map;
     game.playerInfo = msg.player;
     game.playerInfo.stats = msg.stats;
-    console.log(msg.stats);
     game.state.add('GameState', GameState, false);
     game.state.start('GameState');
   }
