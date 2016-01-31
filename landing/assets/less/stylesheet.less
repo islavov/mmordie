@@ -106,6 +106,10 @@ nav.navbar.shrink {
     }
 }
 .animate {
+    &.position, &.character, &.pulsate {
+        width: 172px;
+        height: 172px;
+    }
     &.position {
         -webkit-animation:spin 12s linear infinite;
         -moz-animation:spin 12s linear infinite;
@@ -122,8 +126,7 @@ nav.navbar.shrink {
         animation-iteration-count: infinite;
         position: absolute;
         z-index: 40;
-        width: 172px;
-        height: 172px;
+
         #gradient > .radial(@inner-color: #382d6b; @outer-color: transparent);
         border-radius: 50%;
     }
