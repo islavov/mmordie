@@ -135,14 +135,21 @@ nav.navbar.shrink {
 .btn {
     transition: background-color 0.2s ease-in, color 0.2s ease-in;
 }
-.btn-cta, .btn-cta:active {
+.btn-cta {
     font-size: 22px;
     font-weight: 700;
     padding: 20px 80px 20px 40px;
     background-image: url(../images/arrow-right.svg);
-    background-position: right 20px center;
+    background-position: right 25px center;
     background-size: auto 28px;
     background-repeat: no-repeat;
+    transition: background-position 0.1s ease-in;
+    &:active {
+        background-image: url(../images/arrow-right.svg);
+    }
+    &:hover {
+        background-position: right 20px center;
+    }
 }
 .section-title {
     margin-bottom: 60px;
