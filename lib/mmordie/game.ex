@@ -1,20 +1,3 @@
-defmodule Mmordie.PlayerStats do
-  @specials  %{ranged_attack: %{min_speed: 1, min_damage: 3, min_health: 1, special: 3},
-                block_attack: %{min_speed: 1, min_damage: 1, min_health: 4, special: 2},
-                double_attack: %{min_speed: 2, min_damage: 1, min_health: 1, special: 4}}
-  @level_stats 20
-
-  defstruct health: 1, speed: 1, damage: 1, special: nil
-
-  def get_spec(key) do
-    @specials[key]
-  end
-
-  def get_special_types do
-    Map.keys(@specials)
-  end
-end
-
 defmodule Mmordie.Map do
   @size 18
 
@@ -72,7 +55,7 @@ defmodule Mmordie.Game do
     players = Map.put(players, player.id, player)
     set("players", players)
 
-    stats = make_player_stats(socket.id)
+    stats = Mmordie.PlayerStats.new(socket.id)
     statsmap = get("stats")
     statsmap = Map.put(statsmap, player.id, stats)
     set("stats", statsmap)
@@ -85,7 +68,7 @@ defmodule Mmordie.Game do
 
   def on_disconnect(player_id) do
     Mmordie.Player.remove(player_id)
-    remove_player_stats(player_id)
+    Mmordie.PlayerStats.remove(player_id)
   end
 
   def update(:server, data) do
@@ -103,43 +86,5 @@ defmodule Mmordie.Game do
 
   defp send_response(response_type, data) do
     Mmordie.Endpoint.broadcast! "mmordie:game", response_type, data
-  end
-
-  def random_range(min_value, max_value) do
-    min(min_value + :random.uniform(max_value), max_value)
-  end
-
-  defp make_player_stats(player_id) do
-    special = Enum.random((Mmordie.PlayerStats.get_special_types))
-    stats = make_stats(special)
-  end
-
-  defp remove_player_stats(player_id) do
-    stats = Map.drop(Mmordie.Game.get("stats"), [player_id])
-    set("stats", stats)
-  end
-
-  def make_stats(:ranged_attack) do
-    spec = Mmordie.PlayerStats.get_spec(:ranged_attack)
-    speed = random_range(spec[:min_speed], 10)
-    damage = random_range(spec[:min_damage], 10)
-    health = random_range(spec[:min_health], 10)
-    %Mmordie.PlayerStats{speed: speed, damage: damage, health: health, special: :ranged_attack}
-  end
-
-  def make_stats(:block_attack) do
-    spec = Mmordie.PlayerStats.get_spec(:block_attack)
-    speed = random_range(spec[:min_speed], 10)
-    damage = random_range(spec[:min_damage], 10)
-    health = random_range(spec[:min_health], 10)
-    %Mmordie.PlayerStats{speed: speed, damage: damage, health: health, special: :block_attack}
-  end
-
-  def make_stats(:double_attack) do
-    spec = Mmordie.PlayerStats.get_spec(:double_attack)
-    speed = random_range(spec[:min_speed], 10)
-    damage = random_range(spec[:min_damage], 10)
-    health = random_range(spec[:min_health], 10)
-    %Mmordie.PlayerStats{speed: speed, damage: damage, health: health, special: :double_attack}
   end
 end
