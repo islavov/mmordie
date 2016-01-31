@@ -142,7 +142,10 @@ class GameState extends Phaser.State {
   render() {
     //this.game.debug.bodyInfo(this.player.weapon, 96, 96);
     //this.game.debug.body(this.player.weapon);
-    //this.game.debug.text(`Active enemies: ${this.enemies.length}`, 100, 380);
+    this.game.debug.text(`Active enemies: ${this.enemies.length}`, 20, 40);
+    this.game.debug.text(`Health: ${this.player.stats.health}`, 20, 60);
+    this.game.debug.text(`Speed: ${this.player.stats.speed}`, 20, 80);
+    this.game.debug.text(`Damage: ${this.player.stats.damage}`, 20, 100);
     //this.game.debug.cameraInfo(this.game.camera, 32, 32);
     //this.game.debug.spriteCoords(this.player, 32, 500);
 
