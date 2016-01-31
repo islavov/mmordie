@@ -1,5 +1,5 @@
 defmodule Mmordie.Map do
-  @size 18
+  @size 6
 
   defstruct size: %{x: @size, y: @size}, data: nil
 
@@ -13,7 +13,7 @@ defmodule Mmordie.Map do
 
   def make_terrain(size) do
     for _n <- 1..size*size do
-      Enum.random([0,1])
+      Enum.random([0, 1, 2, 3, 4, 5])
     end
   end
 end
