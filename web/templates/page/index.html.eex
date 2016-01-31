@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Ku-Ke-Ri</title>
+    <link href="<%= static_path(@conn, "css/normalize.css") %>" rel="stylesheet">
     <script src="<%= static_path(@conn, "js/app.js") %>"></script>
 </head>
-<body style="margin: 0;">
+<body>
 
 <script type="text/javascript">
     require("web/static/js/app");
