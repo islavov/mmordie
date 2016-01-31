@@ -5,7 +5,7 @@
     <title>Ku-Ke-Ri</title>
 
 </head>
-<body>
+<body style="margin: 0;">
 <div id="content"></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/2.4.4/phaser.js"></script>
 <script src="<%= static_path(@conn, "/js/vendor.js") %>"></script>

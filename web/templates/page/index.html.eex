@@ -5,7 +5,7 @@
     <title>Ku-Ke-Ri</title>
     <script src="<%= static_path(@conn, "js/app.js") %>"></script>
 </head>
-<body>
+<body style="margin: 0;">
 
 <script type="text/javascript">
     require("web/static/js/app");
