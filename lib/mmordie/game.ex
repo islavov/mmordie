@@ -146,6 +146,9 @@ defmodule Mmordie.Game do
   end
 
   defp set_player_damage(player_id, damage) do
+    # update loop is far more likely to wipe the changes a user made
+    # and this is better for handling the case when multiple players are attacking the
+    # same user. That is why I moved stats out of the players struct.
     statmap = get("stats")
     stats = Map.get(statmap, player_id)
 
