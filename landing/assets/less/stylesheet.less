@@ -29,7 +29,7 @@ body {
 }
 nav.navbar.shrink {
   min-height: 35px;
-  background: @navbar-inverse-bg;
+  background: fade(@navbar-inverse-bg, 96);
   border-bottom-color: @navbar-inverse-border;
   .container {
       padding-top: 15px;
@@ -46,7 +46,8 @@ nav.navbar.shrink {
     position: relative;
     width: 100%;
     &.light {
-        background: #fff;
+        background: #fff url(../images/separator.png) no-repeat;
+        background-position:  center bottom 40px;
     }
     &.transparent {
         background: none;
@@ -54,6 +55,11 @@ nav.navbar.shrink {
     }
     &.hero {
         z-index: 100;
+    }
+    &.cta {
+        padding-bottom: 60px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        background: fade(@navbar-inverse-bg, 90);
     }
 }
 .hero {
@@ -95,8 +101,8 @@ nav.navbar.shrink {
 .the-story {
     z-index: 200;
     .container {
-        padding-top: 80px;
-        padding-bottom: 80px;
+        padding-top: 60px;
+        padding-bottom: 120px;
     }
 }
 .the-gameplay {
