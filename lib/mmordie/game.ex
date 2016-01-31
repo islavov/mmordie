@@ -11,6 +11,7 @@ defmodule Mmordie.Game do
     # Init player container
     set("players", %{})
     set("stats", %{})
+    set("dead", %{})
 
     {:ok, self}
   end
@@ -24,6 +25,24 @@ defmodule Mmordie.Game do
     Agent.update(:game_store, fn map -> Map.put(map, key, value) end)
   end
 
+  def init_player(player_id) do
+    Logger.debug("New player #{player_id}")
+    player = Mmordie.Player.new(player_id)
+    players = get("players")
+    players = Map.put(players, player.id, player)
+    set("players", players)
+    player
+  end
+
+  def init_player_stats(player_id) do
+    # what is this???
+    stats = Mmordie.PlayerStats.new(player_id)
+    statsmap = get("stats")
+    statsmap = Map.put(statsmap, player_id, stats)
+    set("stats", statsmap)
+    stats
+  end
+
   ##### GAME EVENTS #####
   def on_join(socket) do
     map = get("map")
@@ -34,16 +53,8 @@ defmodule Mmordie.Game do
     end
 
     # init player
-    player = Mmordie.Player.new(socket.id)
-    players = get("players")
-    players = Map.put(players, player.id, player)
-    set("players", players)
-
-    # what is this???
-    stats = Mmordie.PlayerStats.new(socket.id)
-    statsmap = get("stats")
-    statsmap = Map.put(statsmap, player.id, stats)
-    set("stats", statsmap)
+    player = init_player(socket.id)
+    stats = init_player_stats(socket.id)
 
     push socket, "join",  %{map: map,
                             player: player,
@@ -52,11 +63,26 @@ defmodule Mmordie.Game do
   end
 
   def on_disconnect(player_id) do
+    Logger.debug("Remove player #{player_id}")
     Mmordie.Player.remove(player_id)
     Mmordie.PlayerStats.remove(player_id)
   end
 
-  def update(:server, data) do
+  def raise_dead(player_id, timestamp) do
+    if (timestamp + 2 < :os.system_time(:seconds)) do
+        init_player(player_id)
+        init_player_stats(player_id)
+
+        dead_players = get("dead")
+        dead_players = Map.drop(dead_players, [player_id])
+        set("dead", dead_players)
+    end
+  end
+
+  def update(:server, _) do
+
+    dead_players = get("dead")
+    for {key, value} <- dead_players, do: raise_dead(key, value)
 
     send_response "new:update", %{players: Map.values(get("players")), stats: get("stats")}
   end
@@ -67,7 +93,13 @@ defmodule Mmordie.Game do
   end
 
   def hit_player(:client, data) do
-    Mmordie.Player.set_damage(data["id"], data["damage"])
+    player_id = Mmordie.Player.set_damage(data["id"], data["damage"])
+
+    if player_id do
+        dead_players = get("dead")
+        dead_players = Map.put(dead_players, player_id, :os.system_time(:seconds))
+        set("dead", dead_players)
+    end
   end
 
   defp send_response(response_type, data) do

@@ -9,19 +9,20 @@ class GameState extends Phaser.State {
     this.others = {};
     this.enemies = this.game.add.group();
     this.enemies.classType = Enemy;
-    this.player = this.initPlayer(this.game.playerInfo);
-    this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
+    this.player = this.initPlayer(this.game.playerInfo, Player);
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.game.sync.chan.on(this.game.sync.UPDATE, this.syncPositions.bind(this))
   }
 
-  initPlayer(playerInfo) {
-    var cx = playerInfo.position.x * 128;
-    var cy = playerInfo.position.y * 128;
-    var player = new Player(this.game, cx, cy, playerInfo.sprite);
+  initPlayer(playerInfo, playerClass) {
+    var cx = playerInfo.position.x;
+    var cy = playerInfo.position.y;
+    var player = new playerClass(this.game, cx, cy, playerInfo.sprite);
     player.id = playerInfo.id;
     player.setStats(playerInfo.stats);
+    this.game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER);
+
     return player
   }
 
@@ -87,10 +88,10 @@ class GameState extends Phaser.State {
     syncData.players.map(
       function (playerData) {
         currentPlayers.push(playerData.id);
-        if (playerData.id == this.game.userID) {
+        if (playerData.id == this.player.id) {
           playerData.stats = syncData.stats[this.player.id];
           if (!this.player.alive){
-            this.player = this.initPlayer(syncData);
+            this.player = this.initPlayer(playerData, Player);
           }
           else {
             this.player.setStats(playerData.stats);
@@ -139,9 +140,9 @@ class GameState extends Phaser.State {
   }
 
   render() {
-    this.game.debug.bodyInfo(this.player.weapon, 96, 96);
-    this.game.debug.body(this.player.weapon);
-    this.game.debug.text(`Active enemies: ${this.enemies.length}`, 100, 380);
+    //this.game.debug.bodyInfo(this.player.weapon, 96, 96);
+    //this.game.debug.body(this.player.weapon);
+    //this.game.debug.text(`Active enemies: ${this.enemies.length}`, 100, 380);
     //this.game.debug.cameraInfo(this.game.camera, 32, 32);
     //this.game.debug.spriteCoords(this.player, 32, 500);
 

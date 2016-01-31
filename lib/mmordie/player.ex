@@ -13,8 +13,8 @@ defmodule Mmordie.Player do
 
     player = %Mmordie.Player{
       id: player_id,
-      position: %{x: :random.uniform(Mmordie.Map.size),
-                  y: :random.uniform(Mmordie.Map.size)},
+      position: %{x: :random.uniform(Mmordie.Map.size) * 128,
+                  y: :random.uniform(Mmordie.Map.size) * 128},
       sprite: Mmordie.Player.get_random_sprite()
     }
   end
@@ -27,13 +27,16 @@ defmodule Mmordie.Player do
   def set_damage(player_id, damage) do
     statmap = Mmordie.Game.get("stats")
     stats = Map.get(statmap, player_id)
+    if stats do
 
-    stats = %{stats | health: stats.health - damage}
-    if stats.health > 0 do
-      Mmordie.PlayerStats.update(player_id, stats)
-    else
-      Mmordie.Player.remove(player_id)
-      Mmordie.PlayerStats.remove(player_id)
+        stats = %{stats | health: stats.health - damage}
+        if stats.health > 0 do
+          Mmordie.PlayerStats.update(player_id, stats)
+        else
+          Mmordie.Player.remove(player_id)
+          Mmordie.PlayerStats.remove(player_id)
+          player_id
+        end
     end
   end
 
