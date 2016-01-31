@@ -81,6 +81,30 @@ nav.navbar.shrink {
 @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
+@-moz-keyframes pulsate {
+    20% {
+        -moz-opacity: 0.2;
+    }
+    60% {
+        -moz-opacity: 1;
+    }
+}
+@-webkit-keyframes pulsate {
+    20% {
+        -webkit-opacity: 0.2;
+    }
+    60% {
+        -webkit-opacity: 1;
+    }
+}
+@keyframes pulsate {
+    20% {
+        opacity: 0.2;
+    }
+    60% {
+        opacity: 1;
+    }
+}
 .animate {
     &.position {
         -webkit-animation:spin 12s linear infinite;
@@ -90,6 +114,18 @@ nav.navbar.shrink {
     }
     &.character {
         z-index: 100;
+    }
+    &.pulsate {
+        -webkit-animation:pulsate 6s ease-out;
+        -moz-animation:pulsate 6s ease-out;
+        animation:pulsate 6s ease-out;
+        animation-iteration-count: infinite;
+        position: absolute;
+        z-index: 40;
+        width: 172px;
+        height: 172px;
+        #gradient > .radial(@inner-color: #382d6b; @outer-color: transparent);
+        border-radius: 50%;
     }
 }
 
