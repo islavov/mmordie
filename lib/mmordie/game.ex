@@ -57,6 +57,7 @@ defmodule Mmordie.Game do
   end
 
   def update(:server, data) do
+
     send_response "new:update", %{players: Map.values(get("players")), stats: get("stats")}
   end
 

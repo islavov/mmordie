@@ -45,7 +45,10 @@ class Player extends Phaser.Sprite {
   }
 
   move(cursors) {
-    var speed = this.stats.speed * 80;
+    if (!this.alive){
+      return
+    }
+    var speed = 300 + this.stats.speed * 20;
 
     this.body.velocity.x = 0;
     this.body.velocity.y = 0;
@@ -93,6 +96,7 @@ class Player extends Phaser.Sprite {
     var yid = this.body.velocity.y / Math.abs(this.body.velocity.y);
     return {'x': xid, 'y': yid}
   }
+
 
   update(){
     this.setAngle();

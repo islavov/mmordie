@@ -6,18 +6,24 @@ class GameState extends Phaser.State {
   create() {
     this.initMap();
 
-    let center = {x: this.game.world.centerX, y: this.game.world.centerY};
-
     this.others = {};
-    this.last_sync = this.game.time.totalElapsedSeconds();
     this.enemies = this.game.add.group();
     this.enemies.classType = Enemy;
-    this.player = new Player(this.game, center.x, center.y, this.game.playerInfo.sprite);
-    this.player.id = this.game.playerInfo.id;
+    this.player = this.initPlayer(this.game.playerInfo);
     this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
 
     this.cursors = this.game.input.keyboard.createCursorKeys();
     this.game.sync.chan.on(this.game.sync.UPDATE, this.syncPositions.bind(this))
+  }
+
+  initPlayer(playerInfo) {
+    console.log(playerInfo.position.x, playerInfo.position.y);
+    var cx = playerInfo.position.x * 128;
+    var cy = playerInfo.position.y * 128;
+    var player = new Player(this.game, cx, cy, playerInfo.sprite);
+    player.id = playerInfo.id;
+    player.setStats(playerInfo.stats);
+    return player
   }
 
   initMap() {
@@ -46,7 +52,9 @@ class GameState extends Phaser.State {
 
   update() {
 
-    this.game.sync.syncPlayer(this.player);
+    if (this.player.alive){
+      this.game.sync.syncPlayer(this.player);
+    }
 
     if (this.player.is_attacking){
       this.game.physics.arcade.overlap(
@@ -81,7 +89,14 @@ class GameState extends Phaser.State {
       function (playerData) {
         currentPlayers.push(playerData.id);
         if (playerData.id == this.game.userID) {
-          this.player.setStats(syncData.stats[this.player.id]);
+          playerData.stats = syncData.stats[this.player.id];
+          if (!this.player.alive){
+            this.player = this.initPlayer(syncData);
+          }
+          else {
+            this.player.setStats(playerData.stats);
+
+          }
           return
         }
 
@@ -113,6 +128,10 @@ class GameState extends Phaser.State {
         delete this.others[player_id];
       }
     }.bind(this));
+
+    if (currentPlayers.indexOf(this.player.id) === -1){
+      this.player.kill();
+    }
 
   }
 

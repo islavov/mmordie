@@ -9,13 +9,14 @@ defmodule Mmordie.Player do
   end
 
   def new(player_id) do
+    :random.seed(:os.timestamp)
+
     player = %Mmordie.Player{
       id: player_id,
       position: %{x: :random.uniform(Mmordie.Map.size),
                   y: :random.uniform(Mmordie.Map.size)},
       sprite: Mmordie.Player.get_random_sprite()
     }
-
   end
 
   def remove(player_id) do
