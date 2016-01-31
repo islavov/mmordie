@@ -5,7 +5,7 @@ class Sync {
 
   constructor(user_id) {
     this.UPDATE = 'new:update';
-
+    this.HIT = 'new:hit';
     this.userId = user_id;
     this.log_enabled = false;
     let socket = new Socket("/socket", {
@@ -57,9 +57,18 @@ class Sync {
     this.chan.push(this.UPDATE, {
         'id': player.id,
         'position': player.world,
-        'velocity': player.body.velocity
+        'velocity': player.body.velocity,
+        'stats': player.stats
       }
     )
+  }
+
+  hitPlayer(player, damage) {
+    this.chan.push(this.HIT, {
+      'id': player.id,
+      'damage': damage
+    })
+
   }
 }
 

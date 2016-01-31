@@ -10,7 +10,8 @@ class GameState extends Phaser.State {
 
     this.others = {};
     this.last_sync = this.game.time.totalElapsedSeconds();
-    this.enemies = this.game.add.physicsGroup();
+    this.enemies = this.game.add.group();
+    this.enemies.classType = Enemy;
     this.player = new Player(this.game, center.x, center.y, this.game.playerInfo.sprite);
     this.player.id = this.game.playerInfo.id;
     this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_PLATFORMER);
@@ -52,8 +53,10 @@ class GameState extends Phaser.State {
         this.player.weapon,
         this.enemies,
         function collisionHandler(sprite1, sprite2){
-          sprite2.takeHit(sprite1.stats.damage)
-        }
+          sprite2.takeHit(this.player.stats.damage)
+        },
+        null,
+        this
       )
     }
 
@@ -78,7 +81,8 @@ class GameState extends Phaser.State {
       function (playerData) {
         currentPlayers.push(playerData.id);
         if (playerData.id == this.game.userID) {
-          return;
+          this.player.setStats(syncData.stats[this.player.id]);
+          return
         }
 
         if (typeof this.others[playerData.id] === 'undefined') {
@@ -87,8 +91,9 @@ class GameState extends Phaser.State {
           other_player.id = playerData.id;
           this.others[playerData.id] = other_player;
           this.enemies.add(other_player);
-        } else {
 
+        } else {
+          other_player = this.others[playerData.id];
           if (this.game.time.totalElapsedSeconds() - this.last_sync > Phaser.Timer.SECOND/2){
             this.others[playerData.id].x = playerData.position.x;
             this.others[playerData.id].y = playerData.position.y;
@@ -98,7 +103,7 @@ class GameState extends Phaser.State {
           this.others[playerData.id].body.velocity.y = playerData.velocity.y;
           this.others[playerData.id].setAngle();
         }
-        other_player.setStats(playerData.stats);
+        other_player.setStats(syncData.stats[other_player.id]);
 
       }.bind(this));
 

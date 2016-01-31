@@ -42,6 +42,8 @@ function initGame() {
   function onJoin(msg) {
     game.worldMap = msg.map;
     game.playerInfo = msg.player;
+    game.playerInfo.stats = msg.stats;
+    console.log(msg.stats);
     game.state.add('GameState', GameState, false);
     game.state.start('GameState');
   }

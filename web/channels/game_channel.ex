@@ -27,4 +27,11 @@ defmodule Mmordie.GameChannel do
     Game.update(:client, msg)
     {:noreply, socket}
   end
+
+  def handle_in("new:hit", msg, socket) do
+    Game.hit_player(:client, msg)
+    {:noreply, socket}
+  end
+
+
 end

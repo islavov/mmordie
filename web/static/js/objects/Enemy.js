@@ -12,8 +12,7 @@ class Enemy extends Player {
   takeHit(damage){
 
     if (!this.isHit){
-      this.stats.health -= damage;
-      this.game.sync.syncPlayer(this);
+      this.game.sync.hitPlayer(this, damage);
       this.game.time.events.add(300, function(){this.isHit = false}.bind(this));
     }
 

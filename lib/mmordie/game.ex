@@ -18,7 +18,7 @@ end
 defmodule Mmordie.Player do
   @sprites [:player1, :player2, :player3]
 
-  defstruct id: -1, position: %{x: 0, y: 0}, velocity: %{x: 0, y: 0}, stats: %Mmordie.PlayerStats{}, sprite: nil
+  defstruct id: -1, position: %{x: 0, y: 0}, velocity: %{x: 0, y: 0}, sprite: nil
 
   def get_random_sprite do
     Enum.random(@sprites)
@@ -53,6 +53,8 @@ defmodule Mmordie.Game do
 
     # Init player container
     set("players", %{})
+    set("stats", %{})
+
     {:ok, self}
   end
 
@@ -80,22 +82,33 @@ defmodule Mmordie.Game do
     players = Map.put(players, player.id, player)
     set("players", players)
 
+    stats = make_player_stats(socket.id)
+    statsmap = get("stats")
+    statsmap = Map.put(statsmap, player.id, stats)
+    set("stats", statsmap)
+
     push socket, "join",  %{map: map,
-                            player: player
+                            player: player,
+                            stats: stats,
                            }
   end
 
   def on_disconnect(player_id) do
     remove_player(player_id)
+    remove_player_stats(player_id)
   end
 
   def update(:server, data) do
-    send_response "new:update", %{players: Map.values(get("players"))}
+    send_response "new:update", %{players: Map.values(get("players")), stats: get("stats")}
   end
 
   def update(:client, data) do
     # TODO if player dead, remove it
     update_player(data["id"], data)
+  end
+
+  def hit_player(:client, data) do
+    set_player_damage(data["id"], data["damage"])
   end
 
   defp send_response(response_type, data) do
@@ -115,9 +128,11 @@ defmodule Mmordie.Game do
                   y: :random.uniform(Mmordie.Map.size)},
       sprite: Mmordie.Player.get_random_sprite()
     }
+
+  end
+  defp make_player_stats(player_id) do
     special = Enum.random((Mmordie.PlayerStats.get_special_types))
     stats = make_stats(special)
-    Map.put(player, :stats, stats)
   end
 
   defp remove_player(player_id) do
@@ -125,19 +140,37 @@ defmodule Mmordie.Game do
     set("players", players)
   end
 
+  defp remove_player_stats(player_id) do
+    stats = Map.drop(get("stats"), [player_id])
+    set("stats", stats)
+  end
+
+  defp set_player_damage(player_id, damage) do
+    statmap = get("stats")
+    stats = Map.get(statmap, player_id)
+
+    keys = Map.keys(stats)
+
+    stats = %Mmordie.PlayerStats{speed: stats.speed, damage: stats.damage,
+                                 health: stats.health - damage, special: stats.special}
+
+    Logger.debug("#{inspect stats}")
+    statmap = Map.put(statmap, player_id, stats)
+    set("stats", statmap)
+  end
+
   defp update_player(player_id, player_data) do
     players = get("players")
     player = Map.get(players, player_id)
     updated_player = %Mmordie.Player{id: player_id,
                                      position: player_data["position"],
-                                     stats: player_data["stats"],
                                      velocity: player_data["velocity"],
                                      sprite: player.sprite}
     players = Map.put(players, player_id, updated_player)
     set("players", players)
   end
 
-  def make_stats(:ranged_atack) do
+  def make_stats(:ranged_attack) do
     spec = Mmordie.PlayerStats.get_spec(:ranged_attack)
     speed = random_range(spec[:min_speed], 10)
     damage = random_range(spec[:min_damage], 10)

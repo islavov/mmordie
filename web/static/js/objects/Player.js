@@ -41,11 +41,11 @@ class Player extends Phaser.Sprite {
   }
 
   setStats(newStats) {
-    this.stats = stats;
+    this.stats = newStats;
   }
 
   move(cursors) {
-    var speed = this.stats.speed;
+    var speed = this.stats.speed * 80;
 
     this.body.velocity.x = 0;
     this.body.velocity.y = 0;
