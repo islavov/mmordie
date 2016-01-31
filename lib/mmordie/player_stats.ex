@@ -20,6 +20,12 @@ defmodule Mmordie.PlayerStats do
     Mmordie.Game.set("stats", stats)
   end
 
+  def update(player_id, stats) do
+    statmap = Mmordie.Game.get("stats")
+    statmap = Map.put(statmap, player_id, stats)
+    Mmordie.Game.set("stats", statmap)
+  end
+
   defp new_stat(:ranged_attack) do
     spec = @specials[:ranged_attack]
     speed = random_range(spec[:min_speed], 10)
