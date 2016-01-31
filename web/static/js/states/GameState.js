@@ -94,16 +94,15 @@ class GameState extends Phaser.State {
 
         } else {
           other_player = this.others[playerData.id];
-          if (this.game.time.totalElapsedSeconds() - this.last_sync > Phaser.Timer.SECOND/2){
-            this.others[playerData.id].x = playerData.position.x;
-            this.others[playerData.id].y = playerData.position.y;
-          }
+          this.others[playerData.id].x = playerData.position.x;
+          this.others[playerData.id].y = playerData.position.y;
 
           this.others[playerData.id].body.velocity.x = playerData.velocity.x;
           this.others[playerData.id].body.velocity.y = playerData.velocity.y;
           this.others[playerData.id].setAngle();
         }
         other_player.setStats(syncData.stats[other_player.id]);
+        other_player.setAction(playerData.action);
 
       }.bind(this));
 

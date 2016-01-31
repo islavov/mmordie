@@ -58,7 +58,8 @@ class Sync {
         'id': player.id,
         'position': player.world,
         'velocity': player.body.velocity,
-        'stats': player.stats
+        'stats': player.stats,
+        'action': player.getAction()
       }
     )
   }
