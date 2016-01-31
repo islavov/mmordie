@@ -13,7 +13,9 @@ defmodule Mmordie.Map do
 
   def make_terrain(size) do
     for _n <- 1..size*size do
-      Enum.random([0,1])
+      Enum.random([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                   1, 2, 3, 4, 4, 4, 5, 5, 5, 5])
     end
   end
 end
