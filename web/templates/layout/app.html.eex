@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <title>Ku-Ke-Ri</title>
-    <link href="<%= static_path(@conn, "/css/normalize.css") %>" rel="stylesheet">
+    <link href="<%= static_path(@conn, "/css/app.css") %>" rel="stylesheet">
 </head>
 <body>
 <div id="content"></div>
