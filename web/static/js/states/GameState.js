@@ -36,21 +36,26 @@ class GameState extends Phaser.State {
     this.map.addTilesetImage('terrain', null, 128, 128, 0, 0);
 
     this.layer = this.map.create('base', this.game.worldMap.size.x, this.game.worldMap.size.y, 128, 128);
-    //this.layer = this.map.createLayer('Ground');
+//    this.layer.debug = true;
+
     var y = 0;
     for (var i in this.game.worldMap.data) {
       if (i % this.game.worldMap.size.x == 0 && i != 0) {
         y += 1
       }
-      var tile = this.game.worldMap.data[i];
+      var tileType = this.game.worldMap.data[i];
       var x = i % this.game.worldMap.size.x;
-      if (tile > 0) {
-        this.map.putTile(tile-1, x, y, this.layer);
+      if (tileType > 0) {
+        var tile = this.map.putTile(tileType-1, x, y, this.layer);
+        if (tileType < 4) {
+          this.map.setCollision(tile.index);
+        }
       }
     }
   }
 
   update() {
+    this.game.physics.arcade.collide(this.player, this.layer);
 
     if (this.player.alive){
       this.game.sync.syncPlayer(this.player);

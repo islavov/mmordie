@@ -71,6 +71,7 @@ function initGame() {
   }
 
   function onJoin(msg) {
+    game.physics.startSystem(Phaser.Physics.ARCADE);
     game.worldMap = msg.map;
     game.playerInfo = msg.player;
     game.playerInfo.stats = msg.stats;
