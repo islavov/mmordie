@@ -46,9 +46,14 @@ class GameState extends Phaser.State {
       var tileType = this.game.worldMap.data[i];
       var x = i % this.game.worldMap.size.x;
       if (tileType > 0) {
-        var tile = this.map.putTile(tileType-1, x, y, this.layer);
         if (tileType < 4) {
+          var tile = this.map.putTile(tileType-1, x, y, this.layer);
           this.map.setCollision(tile.index);
+        } else {
+          var trapType = tileType == 4 ? 'trap1' : 'trap2';
+          var trap = this.game.add.sprite(x*128, y*128, trapType);
+          trap.animations.add('glow');
+          trap.animations.play('glow', 29, true);
         }
       }
     }

@@ -36,6 +36,8 @@ function initGame() {
     game.load.spritesheet('player2idle', 'images/animations/Player2Idle.png', 128, 128, 24);
     game.load.spritesheet('player3idle', 'images/animations/Player3Idle.png', 128, 128, 24);
 
+    game.load.spritesheet('trap1', 'images/animations/trap1.png', 128, 128, 24);
+    game.load.spritesheet('trap2', 'images/animations/trap2.png', 128, 128, 24);
     game.load.image('player1', 'images/player-01.png');
     game.load.image('player2', 'images/player-02.png');
     game.load.image('player3', 'images/player-03.png');
