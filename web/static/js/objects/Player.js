@@ -11,12 +11,13 @@ const ANGLES = {
   '11': 315
 };
 
+const FPS = 22;
 
 class Player extends Phaser.Sprite {
 
   constructor(game, x, y, key) {
-
-    super(game, x, y, `${key}walk`);
+    super(game, x, y, key);
+    this.spriteType = key;
     this.anchor.setTo(0.5, 0.5);
     this.stats = {
       speed: 400,
@@ -25,9 +26,8 @@ class Player extends Phaser.Sprite {
       special: 10
     };
     this.is_attacking = false;
+    this.is_moving = false;
 
-    this.key = key;
-    this.animations.add(`${key}walk`);
     game.add.existing(this);
     game.physics.enable(this, Phaser.Physics.ARCADE);
 
@@ -38,6 +38,12 @@ class Player extends Phaser.Sprite {
 
     this.body.collideWorldBounds = true;
     this.body.mass = 1000;
+  }
+
+  setSprite(action, loop) {
+    this.loadTexture(`${this.spriteType}${action}`);
+    this.animations.add(`${this.spriteType}${action}`);
+    this.animations.play(`${this.spriteType}${action}`, FPS, loop);
   }
 
   setStats(newStats) {
@@ -91,7 +97,7 @@ class Player extends Phaser.Sprite {
     return 'move';
   }
 
-  getDiretion(){
+  getDirection(){
     var xid = this.body.velocity.x / Math.abs(this.body.velocity.x);
     var yid = this.body.velocity.y / Math.abs(this.body.velocity.y);
     return {'x': xid, 'y': yid}
@@ -100,7 +106,7 @@ class Player extends Phaser.Sprite {
 
   update(){
     this.setAngle();
-    var direction = this.getDiretion()
+    var direction = this.getDirection()
 
     if (this.is_attacking){
       return
@@ -108,16 +114,19 @@ class Player extends Phaser.Sprite {
 
     // We are walking
     if (direction.x || direction.y) {
-      this.animations.play(`${this.key}walk`, 22, true);
+      if (!this.is_moving) {
+        this.setSprite('walk', true);
+        this.is_moving = true;
+      }
     } else {
-      this.animations.add(`${this.key}idle`);
-      this.animations.play(`${this.key}idle`, 22, true);
+      this.is_moving = false;
+      this.setSprite('idle', true);
     }
 
   }
 
   setAngle() {
-    var direction = this.getDiretion();
+    var direction = this.getDirection();
 
     if (direction.x || direction.y) {
       var angle = `${direction.x || 0}${direction.y || 0}`;
@@ -130,15 +139,13 @@ class Player extends Phaser.Sprite {
     this.weapon.scale.set(3, 3);
     this.weapon.lifespan = 50;
     this.game.physics.arcade.velocityFromAngle(this.angle+90, 1600, this.weapon.body.velocity);
-
     this.playAttack();
 
-
   }
-  playAttack(){
+
+  playAttack() {
     this.is_attacking = true;
-    this.animations.add(`${this.key}hit`);
-    this.animations.play(`${this.key}hit`, 22, false);
+    this.setSprite('hit', false);
     this.game.time.events.add(200, function () {
       this.is_attacking = false;
 
@@ -148,5 +155,3 @@ class Player extends Phaser.Sprite {
 }
 
 export default Player;
-
-
