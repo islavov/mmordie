@@ -8,6 +8,8 @@ import uuid from 'node-uuid';
 function initGame() {
   var w = window.innerWidth;
   var h = window.innerHeight;
+  var splash;
+  var text;
 
   var game = new Phaser.Game(
     (h > w) ? h : w,
@@ -21,6 +23,7 @@ function initGame() {
   );
 
   function onPreload() {
+    game.load.image('splash', 'images/splash-screen.png');
     game.load.spritesheet('player1walk', 'images/animations/Player1Walk.png', 128, 128, 24);
     game.load.spritesheet('player2walk', 'images/animations/Player2Walk.png', 128, 128, 24);
     game.load.spritesheet('player3walk', 'images/animations/Player3Walk.png', 128, 128, 24);
@@ -42,10 +45,29 @@ function initGame() {
   }
 
   function onCreate() {
+    splash = game.add.sprite(w/2, h/2, 'splash');
+    splash.anchor.setTo(0.5);
+    splash.scale.setTo(0.7, 0.7);
+    splash.fixedToCamera = true;
+    game.input.onDown.add(startGame, this);
+    game.input.keyboard.onDownCallback = function () {
+      startGame();
+    };
+
+    text = game.add.text(w/2, h-20, 'Use arrows to move, a to hit. Press any key to start.', { fill: '#ffffff' });
+    text.anchor.setTo(0.5);
+  }
+
+  function startGame() {
+    game.input.onDown.remove(startGame, this);
+    game.input.keyboard.onDownCallback = null;
+    splash.destroy();
+    text.destroy();
+
     game.userID = uuid.v4();
     game.sync = new Sync(game.userID);
     game.sync.chan.on("join", onJoin);
-    this.game.world.setBounds(0, 0, 18*128, 18*128);
+    game.world.setBounds(0, 0, 18*128, 18*128);
   }
 
   function onJoin(msg) {
